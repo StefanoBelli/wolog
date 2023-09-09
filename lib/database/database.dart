@@ -76,8 +76,8 @@ const String ddlStmts =
   '  Timestamp INTEGER NOT NULL,'
   '  Sets INTEGER NOT NULL,'
   '  Reps INTEGER NOT NULL,'
-  '  OneRepKg REAL NOT NULL,'
-  '  Description TEXT'
+  '  Description TEXT,'
+  '  PRIMARY KEY(ExerciseName, Timestamp)'
   ');'
   ;
  
