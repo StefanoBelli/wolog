@@ -1,4 +1,6 @@
-class Equipment {
+import 'entity.dart';
+
+class Equipment implements Entity {
   final String name;
   final String iconName;
   final String description;
@@ -8,4 +10,14 @@ class Equipment {
     required this.iconName,
     required this.description
   });
+  
+  @override
+  Map toMap() {
+    return {
+      'Name' : name,
+      'IconName' : iconName,
+      'Description' : description
+    };
+  }
+
 }
