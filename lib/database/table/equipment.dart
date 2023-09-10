@@ -1,6 +1,6 @@
-import 'entity.dart';
+import 'mappable_entity.dart';
 
-class Equipment implements Entity {
+class Equipment implements MappableEntity {
   final String name;
   final String iconName;
   final String description;
@@ -12,12 +12,17 @@ class Equipment implements Entity {
   });
   
   @override
-  Map toMap() {
+  Map<String, Object?> toMap() {
     return {
       'Name' : name,
       'IconName' : iconName,
       'Description' : description
     };
+  }
+  
+  @override
+  List<int> getPrimaryKeyIndexesInMap() {
+    return [ 0 ];
   }
 
 }
