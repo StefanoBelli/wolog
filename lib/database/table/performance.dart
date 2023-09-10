@@ -5,7 +5,7 @@ class Performance implements MappableEntity {
   final int timestamp;
   final int sets;
   final int reps;
-  final String description;
+  final String? description;
 
   const Performance({
     required this.exerciseName,
@@ -14,6 +14,13 @@ class Performance implements MappableEntity {
     required this.reps,
     required this.description
   });
+
+  Performance.fromMap(Map<String, Object?> map) : 
+    exerciseName = map['ExerciseName'] as String,
+    timestamp = map['Timestamp'] as int,
+    sets = map['Sets'] as int,
+    reps = map['Reps'] as int,
+    description = map['Description'] as String;
   
   @override
   Map<String, Object?> toMap() {
@@ -31,3 +38,6 @@ class Performance implements MappableEntity {
     return [ 0, 1 ];
   }
 }
+
+List<Performance> getPerformanceList(List<Map<String, Object?>> l) 
+  => List.generate(l.length, (i) => Performance.fromMap(l[i]));

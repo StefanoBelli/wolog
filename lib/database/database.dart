@@ -81,7 +81,7 @@ const String ddlStmts =
   ');'
   ;
  
-Future<Database> getDatabase(String dbPath) async {
+Future<Database> getDatabase(String dbPath) {
   return openDatabase(
     dbPath,
     onCreate: (db, ver) {
@@ -89,4 +89,8 @@ Future<Database> getDatabase(String dbPath) async {
     },
     version: 1
   );
+}
+
+Future<void> closeDatabase(Database database) {
+  return database.close();
 }
