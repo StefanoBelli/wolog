@@ -27,8 +27,8 @@ class Equipment implements MappableEntity {
   }
   
   @override
-  List<int> getPrimaryKeyIndexesInMap() {
-    return [ 0 ];
+  List<String> getPrimaryKeyInMap() {
+    return [ 'Name' ];
   }
 }
 

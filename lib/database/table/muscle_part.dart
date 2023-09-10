@@ -30,8 +30,8 @@ class MusclePart implements MappableEntity {
   }
   
   @override
-  List<int> getPrimaryKeyIndexesInMap() {
-    return [ 0, 1 ];
+  List<String> getPrimaryKeyInMap() {
+    return [ 'Name', 'MuscleName' ];
   }
 }
 

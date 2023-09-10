@@ -1,4 +1,4 @@
 abstract class MappableEntity {
   Map<String, Object?> toMap();
-  List<int> getPrimaryKeyIndexesInMap();
+  List<String> getPrimaryKeyInMap();
 }
