@@ -53,30 +53,7 @@ class _InitialWidgetState extends State<StatefulWidget> {
         //Navigator.push
       } else {
         WidgetsBinding.instance.addPostFrameCallback(
-          (timeStamp) { 
-            showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (_) => AlertDialog(
-                title: const Text("No database found"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("It looks like this is a fresh install"),
-                      TextButton(
-                        child: const Text("Create new database..."),
-                        onPressed: () {},
-                      ),
-                      TextButton(
-                        child: const Text("Import existing database..."),
-                        onPressed: () {},
-                      ),
-                    ],
-                  )
-              )
-            );
-          }
+          (_) => showBarrierDismissibleDialog(context, buildFreshInstallDialog)
         );
       }
     }
@@ -84,3 +61,33 @@ class _InitialWidgetState extends State<StatefulWidget> {
     return const Scaffold();
   }
 }
+
+typedef AlertDialogBuilderFunction = AlertDialog Function(BuildContext);
+
+void showBarrierDismissibleDialog(BuildContext context, AlertDialogBuilderFunction dialogBuilder) {
+  showDialog(
+    barrierDismissible: false, 
+    context: context, builder: 
+    (_) => dialogBuilder(context)
+  );
+}
+
+AlertDialog buildFreshInstallDialog(BuildContext context) 
+  => AlertDialog(
+      title: const Text("No database found"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("It looks like this is a fresh install"),
+          TextButton(
+            child: const Text("Create new database..."),
+            onPressed: () {},
+          ),
+          TextButton(
+            child: const Text("Import existing database..."),
+            onPressed: () {},
+          ),
+        ],
+      )
+    );
