@@ -53,7 +53,7 @@ class _InitialWidgetState extends State<StatefulWidget> {
         //Navigator.push
       } else {
         WidgetsBinding.instance.addPostFrameCallback(
-          (_) => showBarrierDismissibleDialog(context, buildFreshInstallDialog)
+          (_) => showNonBarrierDismissibleDialog(context, buildFreshInstallDialog)
         );
       }
     }
@@ -64,7 +64,7 @@ class _InitialWidgetState extends State<StatefulWidget> {
 
 typedef AlertDialogBuilderFunction = AlertDialog Function(BuildContext);
 
-void showBarrierDismissibleDialog(BuildContext context, AlertDialogBuilderFunction dialogBuilder) {
+void showNonBarrierDismissibleDialog(BuildContext context, AlertDialogBuilderFunction dialogBuilder) {
   showDialog(
     barrierDismissible: false, 
     context: context, builder: 
