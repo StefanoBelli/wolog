@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:wolog/database/database.dart';
 
 void main() {
   runApp(const WologApp());
@@ -15,22 +17,70 @@ class WologApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
-      home: const ExcercisePerformanceOverviewPage(),
+      home: const InitialWidget(),
     );
   }
 }
 
-class ExcercisePerformanceOverviewPage extends StatelessWidget {
-  const ExcercisePerformanceOverviewPage({super.key});
+class InitialWidget extends StatefulWidget {
+  const InitialWidget({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _InitialWidgetState();
+}
+
+class _InitialWidgetState extends State<StatefulWidget> {
+  bool _checkedDatabaseExistence = false;
+  bool _databaseExists = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getDatabaseFilePath().then((dbFilePath) {
+      databaseExists(dbFilePath).then((dbExists) {
+        setState(() {
+          _checkedDatabaseExistence = true;
+          _databaseExists = dbExists;
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("wolog"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: const Center(child: Text("wolog")),
-    );
+    if(_checkedDatabaseExistence) {
+      if(_databaseExists) {
+        //Navigator.push
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (timeStamp) { 
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (_) => AlertDialog(
+                title: const Text("No database found"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("It looks like this is a fresh install"),
+                      TextButton(
+                        child: const Text("Create new database..."),
+                        onPressed: () {},
+                      ),
+                      TextButton(
+                        child: const Text("Import existing database..."),
+                        onPressed: () {},
+                      ),
+                    ],
+                  )
+              )
+            );
+          }
+        );
+      }
+    }
+
+    return const Scaffold();
   }
 }

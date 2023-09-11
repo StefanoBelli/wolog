@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 const String ddlStmts =
   ''
@@ -81,9 +82,9 @@ const String ddlStmts =
   ');'
   ;
  
-Future<Database> getDatabase(String dbPath) {
+Future<Database> getDatabase() async {
   return openDatabase(
-    dbPath,
+    await getDatabaseFilePath(),
     onCreate: (db, ver) {
       return db.execute(ddlStmts);
     },
@@ -93,4 +94,8 @@ Future<Database> getDatabase(String dbPath) {
 
 Future<void> closeDatabase(Database database) {
   return database.close();
+}
+
+Future<String> getDatabaseFilePath() async {
+  return join(await getDatabasesPath(), 'wolog.db');
 }
