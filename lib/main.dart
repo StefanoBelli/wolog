@@ -131,20 +131,6 @@ AlertDialog _buildCreateNewDatabaseDialog(BuildContext context)
       (context) { }, 
       (context) { 
         Navigator.pop(context);
-        _showNonBarrierDismissibleDialog(context, _buildNewEmptyDatabaseDialog);
-      }
-    );
-
-AlertDialog _buildNewEmptyDatabaseDialog(BuildContext context)
-  => _buildInitialSetupDialog(
-      context, 
-      "New empty database", 
-      "In addition, the app must...", 
-      "Get the default icon pack", 
-      "Not do anything else", 
-      (context) { }, 
-      (context) { 
-        Navigator.pop(context);
         pushExerciseOverview(context);
       }
     );
