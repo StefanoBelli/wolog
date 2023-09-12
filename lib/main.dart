@@ -51,12 +51,14 @@ class _InitialPageState extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
     if(_checkedDatabaseExistence) {
-      if(_databaseExists) {
-        pushExerciseOverview(context);
-      } else {
-        Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const SetupPage()));
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_databaseExists) {
+          pushExerciseOverview(context);
+        } else {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const SetupPage()));
+        }
+      });
     }
 
     return const Scaffold();
