@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wolog/page/exercise.dart';
-import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:file_picker/file_picker.dart';
 
 Widget _buildBasicTwoOptsPage(
       BuildContext context,
@@ -80,6 +81,59 @@ abstract class _LoadResourceStateBase extends State<StatefulWidget> {
   _SetupPageLoadResourceChoice? _loadResourceChoice;
   final TextEditingController _customUrlFieldController = TextEditingController();
 
+  void handleResourceLoading(
+      String? defaultUrl, void Function(String) loader) async {
+
+    //todo disable OK BUTTON, reenable in case of error
+    //todo instantiate status widget
+
+    if(_loadResourceChoice == _SetupPageLoadResourceChoice.deviceStorage) {
+      FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles();
+      if(filePickerResult != null) {
+        String? pickedPath;
+        try {
+          pickedPath = filePickerResult.files.single.path;
+        } catch(se) {
+          //todo indicate status, more than one file chosen
+          return;
+        }
+
+        if(pickedPath != null) {
+          loader(pickedPath);
+        } else {
+          //todo indicate status
+        }
+      } 
+      // else {
+      //   do nothing, user canceled picker
+      // }
+    } else {
+      final url = defaultUrl ?? _customUrlFieldController.text;
+
+      Uri parsedUri;
+
+      try {
+        parsedUri = Uri.parse(url);
+      } catch(fe) {
+        //todo indicate status
+        return;
+      }
+
+      http.get(parsedUri).then(
+        (response) {
+          if(response.statusCode != 200) {
+            //todo indicate status
+            return;
+          }
+
+          loader(response.body);
+        }, 
+        onError: (object, stackTrace) {
+          //todo indicate status
+        });
+    }
+  }
+
   Radio<_SetupPageLoadResourceChoice> _getTileRadioLeader(
       _SetupPageLoadResourceChoice choice, {bool enabled = true}) =>
     Radio<_SetupPageLoadResourceChoice>(
@@ -93,7 +147,7 @@ abstract class _LoadResourceStateBase extends State<StatefulWidget> {
   @nonVirtual
   Widget buildLoadResourcePage(
       BuildContext context, String title,
-      String? defaultUrl, void Function(File) loader) {
+      String? defaultUrl, void Function(String) loader) {
 
     bool hasDefaultUrl = defaultUrl != null;
 
@@ -134,7 +188,7 @@ abstract class _LoadResourceStateBase extends State<StatefulWidget> {
             ),
             TextButton(
               child: const Text("OK"),
-              onPressed: () {},
+              onPressed: () => handleResourceLoading(defaultUrl, loader),
             )
           ]),));
   }
