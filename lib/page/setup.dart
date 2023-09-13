@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wolog/page/exercise.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 
 Widget _buildBasicTwoOptsPage(
       BuildContext context,
@@ -42,32 +42,11 @@ class NoDbFoundPage extends StatelessWidget {
       "No database found", 
       "Create new database...", 
       "Import existing database...", 
-      () => Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (c) => const _CreateNewDbPage())), 
+      () => pushExerciseOverview(context),
       () => Navigator.push(
               context, 
               MaterialPageRoute(
                 builder: (c) => const _ImportExistingDbPage()))
-    );
-}
-
-class _CreateNewDbPage extends StatelessWidget {
-  const _CreateNewDbPage();
-
-  @override
-  Widget build(BuildContext context) =>
-    _buildBasicTwoOptsPage(
-      context, 
-      "Create new database", 
-      "Load a preset", 
-      "Leave it empty", 
-      () => Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (c) => const _LoadPresetPage())),
-      () => pushExerciseOverview(context)
     );
 }
 
@@ -77,17 +56,34 @@ enum _SetupPageLoadResourceChoice {
   deviceStorage
 }
 
-abstract class _LoadResourceStateBase extends State<StatefulWidget> {
-  _SetupPageLoadResourceChoice? _loadResourceChoice;
-  final TextEditingController _customUrlFieldController = TextEditingController();
+class _ImportExistingDbPage extends StatefulWidget {
+  const _ImportExistingDbPage();
 
-  void handleResourceLoading(
-      String? defaultUrl, void Function(String) loader) async {
+  @override
+  State<StatefulWidget> createState() => _ImportExistingDbState();
+}
+
+class _ImportExistingDbState extends State<StatefulWidget> {
+  _SetupPageLoadResourceChoice? _loadResourceChoice = _SetupPageLoadResourceChoice.defaultHttpUrl;
+  final TextEditingController _customUrlFieldController = TextEditingController();
+  static const String _defaultUrl = "";
+
+  void _loader(File dbFile) {
+    // todo
+  }
+
+  File _saveInDownloads(String httpBody) {
+    //todo
+    return File("");
+  }
+
+  void _handleResourceLoading() async {
 
     //todo disable OK BUTTON, reenable in case of error
     //todo instantiate status widget
 
     if(_loadResourceChoice == _SetupPageLoadResourceChoice.deviceStorage) {
+      //todo allowedExtensions set to ['db'] with custom file ext enabled
       FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles();
       if(filePickerResult != null) {
         String? pickedPath;
@@ -99,7 +95,7 @@ abstract class _LoadResourceStateBase extends State<StatefulWidget> {
         }
 
         if(pickedPath != null) {
-          loader(pickedPath);
+          _loader(File(pickedPath));
         } else {
           //todo indicate status
         }
@@ -108,7 +104,11 @@ abstract class _LoadResourceStateBase extends State<StatefulWidget> {
       //   do nothing, user canceled picker
       // }
     } else {
-      final url = defaultUrl ?? _customUrlFieldController.text;
+
+      final String url =
+        _loadResourceChoice == _SetupPageLoadResourceChoice.defaultHttpUrl ?
+        _defaultUrl :
+        _customUrlFieldController.text;
 
       Uri parsedUri;
 
@@ -126,7 +126,7 @@ abstract class _LoadResourceStateBase extends State<StatefulWidget> {
             return;
           }
 
-          loader(response.body);
+          _loader(_saveInDownloads(response.body));
         }, 
         onError: (object, stackTrace) {
           //todo indicate status
@@ -135,42 +135,29 @@ abstract class _LoadResourceStateBase extends State<StatefulWidget> {
   }
 
   Radio<_SetupPageLoadResourceChoice> _getTileRadioLeader(
-      _SetupPageLoadResourceChoice choice, {bool enabled = true}) =>
+      _SetupPageLoadResourceChoice choice) =>
     Radio<_SetupPageLoadResourceChoice>(
       toggleable: true,
       value: choice,
       groupValue: _loadResourceChoice,
-      onChanged: enabled ? (v) => setState( () => _loadResourceChoice = v ) : null
+      onChanged: (v) => setState( () => _loadResourceChoice = v )
     );
 
-  @protected
-  @nonVirtual
-  Widget buildLoadResourcePage(
-      BuildContext context, String title,
-      String? defaultUrl, void Function(String) loader) {
-
-    bool hasDefaultUrl = defaultUrl != null;
-
-    _loadResourceChoice ??= hasDefaultUrl ?
-                            _SetupPageLoadResourceChoice.defaultHttpUrl :
-                            _SetupPageLoadResourceChoice.customHttpUrl; 
-
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              title, 
-              style: const TextStyle(fontSize: 30)
+            const Text(
+              "Import existing database", 
+              style: TextStyle(fontSize: 30)
             ),
             ListTile(
-              enabled: hasDefaultUrl,
               title: const Text("Download using HTTP default URL"),
-              leading: _getTileRadioLeader(
-                                            _SetupPageLoadResourceChoice.defaultHttpUrl, 
-                                            enabled: hasDefaultUrl),
+              leading: _getTileRadioLeader(_SetupPageLoadResourceChoice.defaultHttpUrl), 
             ),
             ListTile(
               title: const Text("Download using HTTP custom URL"),
@@ -188,36 +175,9 @@ abstract class _LoadResourceStateBase extends State<StatefulWidget> {
             ),
             TextButton(
               child: const Text("OK"),
-              onPressed: () => handleResourceLoading(defaultUrl, loader),
+              onPressed: () => _handleResourceLoading(),
             )
           ]),));
   }
-}
 
-class _ImportExistingDbPage extends StatefulWidget {
-  const _ImportExistingDbPage();
-
-  @override
-  State<StatefulWidget> createState() => _ImportExistingDbState();
-}
-
-class _LoadPresetPage extends StatefulWidget {
-  const _LoadPresetPage();
-
-  @override
-  State<StatefulWidget> createState() => _LoadPresetState();
-}
-
-class _ImportExistingDbState extends _LoadResourceStateBase {
-  @override
-  Widget build(BuildContext context) =>
-    buildLoadResourcePage(
-      context, "Import existing database", null, (p0) { });
-}
-
-class _LoadPresetState extends _LoadResourceStateBase {
-  @override
-  Widget build(BuildContext context) =>
-    buildLoadResourcePage(
-      context, "Load a preset", "", (p0) { });
 }

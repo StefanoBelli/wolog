@@ -2,7 +2,7 @@ import 'package:wolog/database/table/mappable_entity.dart';
 
 class LeaningPosition implements MappableEntity {
   final String name;
-  final String equipmentName;
+  final String? equipmentName;
   final String? iconName;
   final String? description;
 
