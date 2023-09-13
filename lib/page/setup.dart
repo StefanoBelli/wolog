@@ -1,19 +1,73 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wolog/page/exercise.dart';
 import 'dart:io';
 
-class SetupPage extends StatefulWidget {
-  const SetupPage({super.key});
+Widget _buildBasicTwoOptsPage(
+      BuildContext context,
+      String title,
+      String firstOptBrief,
+      String secondOptBrief,
+      void Function() firstOptFun,
+      void Function() secondOptFun) =>
+    Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center, 
+            children: [
+              Text(
+                title, 
+                style: const TextStyle(fontSize: 30)
+              ),
+              TextButton(
+                onPressed: firstOptFun, 
+                child: Text(firstOptBrief)
+              ),
+              TextButton(
+                onPressed: secondOptFun, 
+                child: Text(secondOptBrief)
+              )
+            ])));
+
+class NoDbFoundPage extends StatelessWidget {
+  const NoDbFoundPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _SetupPageState();
+  Widget build(BuildContext context) =>
+    _buildBasicTwoOptsPage(
+      context, 
+      "No database found", 
+      "Create new database...", 
+      "Import existing database...", 
+      () => Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (c) => const _CreateNewDbPage())), 
+      () => Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (c) => const _ImportExistingDbPage()))
+    );
 }
 
-enum _SetupPagePhase {
-  noDbFound,
-  createNewDb,
-  importExistingDb,
-  loadPreset
+class _CreateNewDbPage extends StatelessWidget {
+  const _CreateNewDbPage({super.key});
+
+  @override
+  Widget build(BuildContext context) =>
+    _buildBasicTwoOptsPage(
+      context, 
+      "Create new database", 
+      "Load a preset", 
+      "Leave it empty", 
+      () => Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (c) => const _LoadPresetPage())),
+      () => pushExerciseOverview(context)
+    );
 }
 
 enum _SetupPageLoadResourceChoice {
@@ -22,52 +76,33 @@ enum _SetupPageLoadResourceChoice {
   deviceStorage
 }
 
-class _SetupPageState extends State<StatefulWidget> {
-  _SetupPagePhase _currentPhase = _SetupPagePhase.noDbFound;
+abstract class _LoadResourceStateBase extends State<StatefulWidget> {
   _SetupPageLoadResourceChoice? _loadResourceChoice;
-  TextEditingController _customUrlFieldController = TextEditingController();
+  final TextEditingController _customUrlFieldController = TextEditingController();
 
   Radio<_SetupPageLoadResourceChoice> _getTileRadioLeader(
-      _SetupPageLoadResourceChoice choice) =>
+      _SetupPageLoadResourceChoice choice, {bool enabled = true}) =>
     Radio<_SetupPageLoadResourceChoice>(
       toggleable: true,
       value: choice,
       groupValue: _loadResourceChoice,
-      onChanged: (_SetupPageLoadResourceChoice? v) { 
-        setState( () => _loadResourceChoice = v ); 
-      }
+      onChanged: enabled ? (v) => setState( () => _loadResourceChoice = v ) : null
     );
 
-  static Widget _buildBasicTwoOptsPage(BuildContext context, String title,
-      String firstOptBrief, String secondOptBrief,
-      void Function() firstOptFun, void Function() secondOptFun) =>
-    Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              title, 
-              style: const TextStyle(fontSize: 30)
-            ),
-            TextButton(
-              onPressed: firstOptFun,
-              child: Text(firstOptBrief)
-            ),
-            TextButton(
-              onPressed: secondOptFun,
-              child: Text(secondOptBrief)
-            )])));
-
-  Widget _buildLoadResourcePage(
+  @protected
+  @nonVirtual
+  Widget buildLoadResourcePage(
       BuildContext context, String title,
       String? defaultUrl, void Function(File) loader) {
 
-    _loadResourceChoice ??= (defaultUrl == null) ?
-                            _SetupPageLoadResourceChoice.customHttpUrl :
-                            _SetupPageLoadResourceChoice.defaultHttpUrl; 
+    bool hasDefaultUrl = defaultUrl != null;
+
+    _loadResourceChoice ??= hasDefaultUrl ?
+                            _SetupPageLoadResourceChoice.defaultHttpUrl :
+                            _SetupPageLoadResourceChoice.customHttpUrl; 
 
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -77,9 +112,11 @@ class _SetupPageState extends State<StatefulWidget> {
               style: const TextStyle(fontSize: 30)
             ),
             ListTile(
-              enabled: defaultUrl != null,
+              enabled: hasDefaultUrl,
               title: const Text("Download using HTTP default URL"),
-              leading: _getTileRadioLeader(_SetupPageLoadResourceChoice.defaultHttpUrl),
+              leading: _getTileRadioLeader(
+                                            _SetupPageLoadResourceChoice.defaultHttpUrl, 
+                                            enabled: hasDefaultUrl),
             ),
             ListTile(
               title: const Text("Download using HTTP custom URL"),
@@ -101,45 +138,32 @@ class _SetupPageState extends State<StatefulWidget> {
             )
           ]),));
   }
+}
 
-  Widget _buildNoDbFound(BuildContext context) =>
-    _buildBasicTwoOptsPage(
-      context,
-      "No database found",
-      "Create new database...",
-      "Import existing database...",
-      () => setState(() => _currentPhase = _SetupPagePhase.createNewDb),
-      () => setState(() => _currentPhase = _SetupPagePhase.importExistingDb));
-
-  Widget _buildCreateNewDb(BuildContext context) =>
-    _buildBasicTwoOptsPage(
-      context,
-      "Create new database",
-      "Load a preset...",
-      "Leave it empty", 
-      () => setState(() => _currentPhase = _SetupPagePhase.loadPreset) , 
-      () => pushExerciseOverview(context));
+class _ImportExistingDbPage extends StatefulWidget {
+  const _ImportExistingDbPage();
 
   @override
-  Widget build(BuildContext context) {
-    if(_currentPhase == _SetupPagePhase.noDbFound) {
-      return _buildNoDbFound(context);
-    } else if(_currentPhase == _SetupPagePhase.createNewDb) {
-      return _buildCreateNewDb(context);
-    } else if(_currentPhase == _SetupPagePhase.importExistingDb) {
-      return _buildLoadResourcePage(
-        context, 
-        "Import existing database", 
-        null, 
-        (p0) { }
-      );
-    }
+  State<StatefulWidget> createState() => _ImportExistingDbState();
+}
 
-    return _buildLoadResourcePage(
-      context, 
-      "Load a preset", 
-      "myurl", 
-      (p0) { }
-    );
-  }
+class _LoadPresetPage extends StatefulWidget {
+  const _LoadPresetPage();
+
+  @override
+  State<StatefulWidget> createState() => _LoadPresetState();
+}
+
+class _ImportExistingDbState extends _LoadResourceStateBase {
+  @override
+  Widget build(BuildContext context) =>
+    buildLoadResourcePage(
+      context, "Import existing database", null, (p0) { });
+}
+
+class _LoadPresetState extends _LoadResourceStateBase {
+  @override
+  Widget build(BuildContext context) =>
+    buildLoadResourcePage(
+      context, "Load a preset", "", (p0) { });
 }

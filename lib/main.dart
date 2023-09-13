@@ -56,7 +56,7 @@ class _InitialPageState extends State<StatefulWidget> {
           pushExerciseOverview(context);
         } else {
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const SetupPage()));
+              MaterialPageRoute(builder: (context) => const NoDbFoundPage()));
         }
       });
     }
