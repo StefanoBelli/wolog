@@ -8,6 +8,7 @@ import 'package:wolog/database/table/muscle_part.dart';
 import 'package:wolog/database/table/muscle.dart';
 import 'package:wolog/database/table/performance.dart';
 import 'package:wolog/database/table/mappable_entity.dart';
+import 'package:wolog/database/table/session.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<int> _delete(Database database, String tableName, MappableEntity mappableEntity) {
@@ -25,4 +26,5 @@ Future<int> deleteIcon(Database d, Icon e) => _delete(d, 'Icon', e);
 Future<int> deleteLeaningPosition(Database d, LeaningPosition e) => _delete(d, 'LeaningPosition', e);
 Future<int> deleteMusclePart(Database d, MusclePart e) => _delete(d, 'MusclePart', e);
 Future<int> deleteMuscle(Database d, Muscle e) => _delete(d, 'Muscle', e);
+Future<int> deleteSession(Database d, Session e) => _delete(d, 'Session', e);
 Future<int> deletePerformance(Database d, Performance e) => _delete(d, 'Performance', e);

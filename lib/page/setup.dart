@@ -53,7 +53,7 @@ class NoDbFoundPage extends StatelessWidget {
 }
 
 class _CreateNewDbPage extends StatelessWidget {
-  const _CreateNewDbPage({super.key});
+  const _CreateNewDbPage();
 
   @override
   Widget build(BuildContext context) =>

@@ -11,4 +11,5 @@ Future<List<Map<String, Object?>>> queryAllIcon(Database database) => _queryAllO
 Future<List<Map<String, Object?>>> queryAllLeaningPosition(Database database) => _queryAllObject(database, 'LeaningPosition');
 Future<List<Map<String, Object?>>> queryAllMusclePart(Database database) => _queryAllObject(database, 'MusclePart');
 Future<List<Map<String, Object?>>> queryAllMuscle(Database database) => _queryAllObject(database, 'Muscle');
+Future<List<Map<String, Object?>>> queryAllSession(Database database) => _queryAllObject(database, 'Session');
 Future<List<Map<String, Object?>>> queryAllPerformance(Database database) => _queryAllObject(database, 'Performance');

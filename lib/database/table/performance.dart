@@ -1,41 +1,45 @@
 import 'package:wolog/database/table/mappable_entity.dart';
 
 class Performance implements MappableEntity {
-  final String exerciseName;
-  final int timestamp;
-  final int sets;
+  final int setId;
+  final int sessionDateTimestamp;
+  final int sessionExerciseName;
   final int reps;
+  final double? weightKg;
   final String? description;
 
   const Performance({
-    required this.exerciseName,
-    required this.timestamp,
-    required this.sets,
+    required this.setId,
+    required this.sessionDateTimestamp,
+    required this.sessionExerciseName,
     required this.reps,
+    required this.weightKg,
     required this.description
   });
 
-  Performance.fromMap(Map<String, Object?> map) : 
-    exerciseName = map['ExerciseName'] as String,
-    timestamp = map['Timestamp'] as int,
-    sets = map['Sets'] as int,
-    reps = map['Reps'] as int,
-    description = map['Description'] as String;
-  
+  Performance.fromMap(Map<String, Object?> m) :
+    setId = m["SetId"] as int,
+    sessionDateTimestamp = m["SessionDateTimestamp"] as int,
+    sessionExerciseName = m["SessionExerciseName"] as int,
+    reps = m["Reps"] as int,
+    weightKg = m["WeightKg"] as double,
+    description = m["Description"] as String;
+
+  @override
+  List<String> getPrimaryKeyInMap() {
+    return [ "SetId", "SessionDateTimestamp", "SessionExerciseName" ];
+  }
+
   @override
   Map<String, Object?> toMap() {
     return {
-      'ExerciseName' : exerciseName,
-      'Timestamp' : timestamp,
-      'Sets' : sets,
-      'Reps' : reps,
-      'Description' : description
+      "SetId" : setId,
+      "SessionDateTimestamp" : sessionDateTimestamp,
+      "SessionExerciseName" : sessionExerciseName,
+      "Reps" : reps,
+      "WeightKg" : weightKg,
+      "Description" : description
     };
-  }
-  
-  @override
-  List<String> getPrimaryKeyInMap() {
-    return [ 'ExerciseName', 'Timestamp' ];
   }
 }
 

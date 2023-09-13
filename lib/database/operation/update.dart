@@ -8,6 +8,7 @@ import 'package:wolog/database/table/muscle_part.dart';
 import 'package:wolog/database/table/muscle.dart';
 import 'package:wolog/database/table/performance.dart';
 import 'package:wolog/database/table/mappable_entity.dart';
+import 'package:wolog/database/table/session.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<int> _update(Database database, String tableName, MappableEntity mappableEntity) {
@@ -26,4 +27,5 @@ Future<int> updateIcon(Database d, Icon e) => _update(d, 'Icon', e);
 Future<int> updateLeaningPosition(Database d, LeaningPosition e) => _update(d, 'LeaningPosition', e);
 Future<int> updateMusclePart(Database d, MusclePart e) => _update(d, 'MusclePart', e);
 Future<int> updateMuscle(Database d, Muscle e) => _update(d, 'Muscle', e);
+Future<int> updateSession(Database d, Session e) => _update(d, 'Session', e);
 Future<int> updatePerformance(Database d, Performance e) => _update(d, 'Performance', e);
