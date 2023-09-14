@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wolog/page/exercise.dart';
-import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
 import 'dart:io';
 
 Widget _buildBasicTwoOptsPage(
@@ -50,7 +50,7 @@ class NoDbFoundPage extends StatelessWidget {
     );
 }
 
-enum _SetupPageLoadResourceChoice {
+enum _ObtainResourceChoice {
   defaultHttpUrl,
   customHttpUrl,
   deviceStorage
@@ -64,15 +64,15 @@ class _ImportExistingDbPage extends StatefulWidget {
 }
 
 class _ImportExistingDbState extends State<StatefulWidget> {
-  _SetupPageLoadResourceChoice? _loadResourceChoice = _SetupPageLoadResourceChoice.defaultHttpUrl;
+  _ObtainResourceChoice? _loadResourceChoice = _ObtainResourceChoice.defaultHttpUrl;
   final TextEditingController _customUrlFieldController = TextEditingController();
   static const String _defaultUrl = "";
 
-  void _loader(File dbFile) {
+  void _copyAsAppDb(File dbFile) {
     // todo
   }
 
-  File _saveInDownloads(String httpBody) {
+  File _saveInDownloads(List<int> httpBodyBytes) {
     //todo
     return File("");
   }
@@ -82,7 +82,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
     //todo disable OK BUTTON, reenable in case of error
     //todo instantiate status widget
 
-    if(_loadResourceChoice == _SetupPageLoadResourceChoice.deviceStorage) {
+    if(_loadResourceChoice == _ObtainResourceChoice.deviceStorage) {
       //todo allowedExtensions set to ['db'] with custom file ext enabled
       FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles();
       if(filePickerResult != null) {
@@ -95,7 +95,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
         }
 
         if(pickedPath != null) {
-          _loader(File(pickedPath));
+          _copyAsAppDb(File(pickedPath));
         } else {
           //todo indicate status
         }
@@ -106,7 +106,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
     } else {
 
       final String url =
-        _loadResourceChoice == _SetupPageLoadResourceChoice.defaultHttpUrl ?
+        _loadResourceChoice == _ObtainResourceChoice.defaultHttpUrl ?
         _defaultUrl :
         _customUrlFieldController.text;
 
@@ -119,24 +119,42 @@ class _ImportExistingDbState extends State<StatefulWidget> {
         return;
       }
 
-      http.get(parsedUri).then(
-        (response) {
-          if(response.statusCode != 200) {
-            //todo indicate status
-            return;
-          }
+      List<int> bodyBytes = [];
+      final req = http.Request("GET", parsedUri);
+      http.StreamedResponse res;
 
-          _loader(_saveInDownloads(response.body));
-        }, 
-        onError: (object, stackTrace) {
-          //todo indicate status
-        });
+      try {
+        res = await req.send();
+      } catch(ae) {
+        //todo indicate status
+        return;
+      }
+
+      if (res.statusCode == 200) {
+        res.stream.listen(
+          (data) {
+            bodyBytes += data;
+            //signal progress
+          }, 
+          onError: (e) {
+            //indicate status
+          }, 
+          onDone: () {
+            //save file
+            //copy as appdb
+            //close dialog
+            //push exercises overview
+          }, 
+          cancelOnError: true);
+      } else {
+        //indicate status
+      }
     }
   }
 
-  Radio<_SetupPageLoadResourceChoice> _getTileRadioLeader(
-      _SetupPageLoadResourceChoice choice) =>
-    Radio<_SetupPageLoadResourceChoice>(
+  Radio<_ObtainResourceChoice> _getTileRadioLeader(
+      _ObtainResourceChoice choice) =>
+    Radio<_ObtainResourceChoice>(
       toggleable: true,
       value: choice,
       groupValue: _loadResourceChoice,
@@ -157,21 +175,21 @@ class _ImportExistingDbState extends State<StatefulWidget> {
             ),
             ListTile(
               title: const Text("Download using HTTP default URL"),
-              leading: _getTileRadioLeader(_SetupPageLoadResourceChoice.defaultHttpUrl), 
+              leading: _getTileRadioLeader(_ObtainResourceChoice.defaultHttpUrl), 
             ),
             ListTile(
               title: const Text("Download using HTTP custom URL"),
-              leading: _getTileRadioLeader(_SetupPageLoadResourceChoice.customHttpUrl),
+              leading: _getTileRadioLeader(_ObtainResourceChoice.customHttpUrl),
             ),
             TextField(
-              enabled: _loadResourceChoice == _SetupPageLoadResourceChoice.customHttpUrl,
+              enabled: _loadResourceChoice == _ObtainResourceChoice.customHttpUrl,
               keyboardType: TextInputType.url,
               controller: _customUrlFieldController,
               decoration: const InputDecoration(hintText: "Type in custom URL")
             ),
             ListTile(
               title: const Text("Copy from my own device storage"),
-              leading: _getTileRadioLeader(_SetupPageLoadResourceChoice.deviceStorage),
+              leading: _getTileRadioLeader(_ObtainResourceChoice.deviceStorage),
             ),
             TextButton(
               child: const Text("OK"),
