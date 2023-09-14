@@ -4,23 +4,23 @@ class ExerciseMuscleInvolvement implements MappableEntity {
   static const String musclePartNameKey = "MusclePartName";
   static const String muscleNameKey = "MuscleName";
   static const String exerciseNameKey = "ExerciseName";
-  static const String exerciseLeaningPositionNameKey = "ExerciseLeaningPositionName";
-  static const String exerciseLeaningPositionEquipmentNameKey = "ExerciseLeaningPositionEquipmentName";
+  static const String exerciseEquipmentNameKey = "ExerciseEquipmentName";
+  static const String exerciseBodyPositioningNameKey = "ExerciseBodyPositioningName";
   static const String descriptionKey = "Description";
 
   final String? musclePartName;
   final String muscleName;
   final String exerciseName;
-  final String exerciseLeaningPositionName;
-  final String? exerciseLeaningPositionEquipmentName;
+  final String? exerciseEquipmentName;
+  final String exerciseBodyPositioningName;
   final String? description;
 
   const ExerciseMuscleInvolvement({
     required this.musclePartName,
     required this.muscleName,
     required this.exerciseName,
-    required this.exerciseLeaningPositionName,
-    required this.exerciseLeaningPositionEquipmentName,
+    required this.exerciseEquipmentName,
+    required this.exerciseBodyPositioningName,
     required this.description
   });
 
@@ -28,13 +28,13 @@ class ExerciseMuscleInvolvement implements MappableEntity {
     musclePartName = m[musclePartNameKey] as String,
     muscleName = m[muscleNameKey] as String,
     exerciseName = m[exerciseNameKey] as String,
-    exerciseLeaningPositionName = m[exerciseLeaningPositionNameKey] as String,
-    exerciseLeaningPositionEquipmentName = m[exerciseLeaningPositionEquipmentNameKey] as String,
+    exerciseEquipmentName = m[exerciseEquipmentNameKey] as String,
+    exerciseBodyPositioningName = m[exerciseBodyPositioningNameKey] as String,
     description = m[descriptionKey] as String;
     
   @override
   List<String> getPrimaryKeyInMap() {
-    return [ musclePartNameKey, muscleNameKey, exerciseNameKey, exerciseLeaningPositionNameKey, exerciseLeaningPositionEquipmentNameKey ];
+    return [ musclePartNameKey, muscleNameKey, exerciseNameKey, exerciseEquipmentNameKey, exerciseBodyPositioningNameKey ];
   }
 
   @override
@@ -43,8 +43,8 @@ class ExerciseMuscleInvolvement implements MappableEntity {
       musclePartNameKey : musclePartName,
       muscleNameKey : muscleName,
       exerciseNameKey : exerciseName,
-      exerciseLeaningPositionNameKey : exerciseLeaningPositionName,
-      exerciseLeaningPositionEquipmentNameKey : exerciseLeaningPositionEquipmentName,
+      exerciseEquipmentNameKey : exerciseEquipmentName,
+      exerciseBodyPositioningNameKey : exerciseBodyPositioningName,
       descriptionKey : description
     };
   }

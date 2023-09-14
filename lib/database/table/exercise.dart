@@ -2,43 +2,43 @@ import 'package:wolog/database/table/mappable_entity.dart';
 
 class Exercise implements MappableEntity {
   static const String nameKey = "Name";
-  static const String leaningPositionNameKey = "LeaningPositionName";
-  static const String leaningPositionEquipmentNameKey = "LeaningPositionEquipmentName";
+  static const String equipmentNameKey = "EquipmentName";
+  static const String bodyPositioningNameKey = "BodyPositioningName";
   static const String iconNameKey = "IconName";
   static const String descriptionKey = "Description";
   
   final String name;
-  final String leaningPositionName;
-  final String? leaningPositionEquipmentName;
+  final String? equipmentName;
+  final String bodyPositioningName;
   final String? iconName;
   final String? description;
 
   const Exercise({
     required this.name,
-    required this.leaningPositionName,
-    required this.leaningPositionEquipmentName,
+    required this.equipmentName,
+    required this.bodyPositioningName,
     required this.iconName,
     required this.description
   });
 
   Exercise.fromMap(Map<String, Object?> m) :
     name = m[nameKey] as String,
-    leaningPositionName = m[leaningPositionNameKey] as String,
-    leaningPositionEquipmentName = m[leaningPositionEquipmentNameKey] as String,
+    equipmentName = m[equipmentNameKey] as String,
+    bodyPositioningName = m[bodyPositioningNameKey] as String,
     iconName = m[iconNameKey] as String,
     description = m[descriptionKey] as String;
    
   @override
   List<String> getPrimaryKeyInMap() {
-    return [ nameKey, leaningPositionNameKey, leaningPositionEquipmentNameKey ];
+    return [ nameKey, equipmentNameKey, bodyPositioningNameKey ];
   }
   
   @override
   Map<String, Object?> toMap() {
     return {
       nameKey : name,
-      leaningPositionNameKey : leaningPositionName,
-      leaningPositionEquipmentNameKey : leaningPositionEquipmentName,
+      equipmentNameKey : equipmentName,
+      bodyPositioningNameKey : bodyPositioningName,
       iconNameKey : iconName,
       descriptionKey : description
     };

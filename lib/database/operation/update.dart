@@ -3,7 +3,7 @@ import 'package:wolog/database/table/equipment.dart';
 import 'package:wolog/database/table/exercise_muscle_involvement.dart';
 import 'package:wolog/database/table/exercise.dart';
 import 'package:wolog/database/table/icon.dart';
-import 'package:wolog/database/table/leaning_position.dart';
+import 'package:wolog/database/table/body_positioning.dart';
 import 'package:wolog/database/table/muscle_part.dart';
 import 'package:wolog/database/table/muscle.dart';
 import 'package:wolog/database/table/performance.dart';
@@ -24,7 +24,7 @@ Future<int> updateEquipment(Database d, Equipment e) => _update(d, 'Equipment', 
 Future<int> updateExerciseMuscleInvolvement(Database d, ExerciseMuscleInvolvement e) => _update(d, 'ExerciseMuscleInvolvement', e);
 Future<int> updateExercise(Database d, Exercise e) => _update(d, 'Exercise', e);
 Future<int> updateIcon(Database d, Icon e) => _update(d, 'Icon', e);
-Future<int> updateLeaningPosition(Database d, LeaningPosition e) => _update(d, 'LeaningPosition', e);
+Future<int> updateBodyPositioning(Database d, BodyPositioning e) => _update(d, 'BodyPositioning', e);
 Future<int> updateMusclePart(Database d, MusclePart e) => _update(d, 'MusclePart', e);
 Future<int> updateMuscle(Database d, Muscle e) => _update(d, 'Muscle', e);
 Future<int> updateSession(Database d, Session e) => _update(d, 'Session', e);

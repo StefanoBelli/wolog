@@ -3,8 +3,8 @@ import 'package:wolog/database/table/mappable_entity.dart';
 class Performance implements MappableEntity {
   static const String sessionDateTimestampKey = "SessionDateTimestamp";
   static const String sessionExerciseNameKey = "SessionExerciseName";
-  static const String sessionExerciseLeaningPositionNameKey = "SessionExerciseLeaningPositionName";
-  static const String sessionExerciseLeaningPositionEquipmentNameKey = "SessionExerciseLeaningPositionEquipmentName";
+  static const String sessionExerciseEquipmentNameKey = "SessionExerciseEquipmentName";
+  static const String sessionExerciseBodyPositioningNameKey = "SessionExerciseBodyPositioningName";
   static const String setNoKey = "SetNo";
   static const String repsKey = "Reps";
   static const String weightKgKey = "WeightKg";
@@ -12,8 +12,8 @@ class Performance implements MappableEntity {
 
   final int sessionDateTimestamp;
   final String sessionExerciseName;
-  final String sessionExerciseLeaningPositionName;
-  final String? sessionExerciseLeaningPositionEquipmentName;
+  final String? sessionExerciseEquipmentName;
+  final String sessionExerciseBodyPositioningName;
   final int setNo;
   final int reps;
   final double? weightKg;
@@ -22,8 +22,8 @@ class Performance implements MappableEntity {
   const Performance({
     required this.sessionDateTimestamp,
     required this.sessionExerciseName,
-    required this.sessionExerciseLeaningPositionName,
-    required this.sessionExerciseLeaningPositionEquipmentName,
+    required this.sessionExerciseEquipmentName,
+    required this.sessionExerciseBodyPositioningName,
     required this.setNo,
     required this.reps,
     required this.weightKg,
@@ -33,8 +33,8 @@ class Performance implements MappableEntity {
   Performance.fromMap(Map<String, Object?> m) :
     sessionDateTimestamp = m[sessionDateTimestampKey] as int,
     sessionExerciseName = m[sessionExerciseNameKey] as String,
-    sessionExerciseLeaningPositionName = m[sessionExerciseLeaningPositionNameKey] as String,
-    sessionExerciseLeaningPositionEquipmentName = m[sessionExerciseLeaningPositionEquipmentNameKey] as String,
+    sessionExerciseEquipmentName = m[sessionExerciseEquipmentNameKey] as String,
+    sessionExerciseBodyPositioningName = m[sessionExerciseBodyPositioningNameKey] as String,
     setNo = m[setNoKey] as int,
     reps = m[repsKey] as int,
     weightKg = m[weightKgKey] as double,
@@ -42,7 +42,7 @@ class Performance implements MappableEntity {
 
   @override
   List<String> getPrimaryKeyInMap() {
-    return [ sessionDateTimestampKey, sessionExerciseNameKey, sessionExerciseLeaningPositionNameKey, sessionExerciseLeaningPositionEquipmentNameKey, setNoKey ];
+    return [ sessionDateTimestampKey, sessionExerciseNameKey, sessionExerciseEquipmentNameKey, sessionExerciseBodyPositioningNameKey, setNoKey ];
   }
 
   @override
@@ -50,8 +50,8 @@ class Performance implements MappableEntity {
     return {
       sessionDateTimestampKey : sessionDateTimestamp,
       sessionExerciseNameKey : sessionExerciseName,
-      sessionExerciseLeaningPositionNameKey : sessionExerciseLeaningPositionName,
-      sessionExerciseLeaningPositionEquipmentNameKey : sessionExerciseLeaningPositionEquipmentName,
+      sessionExerciseEquipmentNameKey : sessionExerciseEquipmentName,
+      sessionExerciseBodyPositioningNameKey : sessionExerciseBodyPositioningName,
       setNoKey : setNo,
       repsKey : reps,
       weightKgKey : weightKg,

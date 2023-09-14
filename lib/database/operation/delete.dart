@@ -3,7 +3,7 @@ import 'package:wolog/database/table/equipment.dart';
 import 'package:wolog/database/table/exercise_muscle_involvement.dart';
 import 'package:wolog/database/table/exercise.dart';
 import 'package:wolog/database/table/icon.dart';
-import 'package:wolog/database/table/leaning_position.dart';
+import 'package:wolog/database/table/body_positioning.dart';
 import 'package:wolog/database/table/muscle_part.dart';
 import 'package:wolog/database/table/muscle.dart';
 import 'package:wolog/database/table/performance.dart';
@@ -23,7 +23,7 @@ Future<int> deleteEquipment(Database d, Equipment e) => _delete(d, 'Equipment', 
 Future<int> deleteExerciseMuscleInvolvement(Database d, ExerciseMuscleInvolvement e) => _delete(d, 'ExerciseMuscleInvolvement', e);
 Future<int> deleteExercise(Database d, Exercise e) => _delete(d, 'Exercise', e);
 Future<int> deleteIcon(Database d, Icon e) => _delete(d, 'Icon', e);
-Future<int> deleteLeaningPosition(Database d, LeaningPosition e) => _delete(d, 'LeaningPosition', e);
+Future<int> deleteBodyPositioning(Database d, BodyPositioning e) => _delete(d, 'BodyPositioning', e);
 Future<int> deleteMusclePart(Database d, MusclePart e) => _delete(d, 'MusclePart', e);
 Future<int> deleteMuscle(Database d, Muscle e) => _delete(d, 'Muscle', e);
 Future<int> deleteSession(Database d, Session e) => _delete(d, 'Session', e);

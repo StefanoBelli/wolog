@@ -3,34 +3,34 @@ import 'package:wolog/database/table/mappable_entity.dart';
 class Session implements MappableEntity {
   static const String dateTimestampKey = "DateTimestamp";
   static const String exerciseNameKey = "ExerciseName";
-  static const String exerciseLeaningPositionNameKey = "ExerciseLeaningPositionName";
-  static const String exerciseLeaningPositionEquipmentNameKey = "ExerciseLeaningPositionEquipmentName";
+  static const String exerciseEquipmentNameKey = "ExerciseEquipmentName";
+  static const String exerciseBodyPositioningNameKey = "ExerciseBodyPositioningName";
   static const String descriptionKey = "Description";
   
   final int dateTimestamp;
   final String exerciseName;
-  final String exerciseLeaningPositionName;
-  final String? exerciseLeaningPositionEquipmentName;
+  final String? exerciseEquipmentName;
+  final String exerciseBodyPositioningName;
   final String? description;
 
   const Session({
     required this.dateTimestamp,
     required this.exerciseName,
-    required this.exerciseLeaningPositionName,
-    required this.exerciseLeaningPositionEquipmentName,
+    required this.exerciseEquipmentName,
+    required this.exerciseBodyPositioningName,
     required this.description
   });
 
   Session.fromMap(Map<String,Object?> m) :
     dateTimestamp = m[dateTimestampKey] as int,
     exerciseName = m[exerciseNameKey]as String,
-    exerciseLeaningPositionName = m[exerciseLeaningPositionNameKey] as String,
-    exerciseLeaningPositionEquipmentName = m[exerciseLeaningPositionEquipmentNameKey] as String,
+    exerciseEquipmentName = m[exerciseEquipmentNameKey] as String,
+    exerciseBodyPositioningName = m[exerciseBodyPositioningNameKey] as String,
     description = m[descriptionKey] as String;
 
   @override
   List<String> getPrimaryKeyInMap() {
-    return [ dateTimestampKey, exerciseNameKey, exerciseLeaningPositionNameKey, exerciseLeaningPositionEquipmentNameKey ];
+    return [ dateTimestampKey, exerciseNameKey, exerciseEquipmentNameKey, exerciseBodyPositioningNameKey ];
   }
 
   @override
@@ -38,8 +38,8 @@ class Session implements MappableEntity {
     return {
       dateTimestampKey : dateTimestamp,
       exerciseNameKey : exerciseName,
-      exerciseLeaningPositionNameKey : exerciseLeaningPositionName,
-      exerciseLeaningPositionEquipmentNameKey : exerciseLeaningPositionEquipmentName,
+      exerciseEquipmentNameKey : exerciseEquipmentName,
+      exerciseBodyPositioningNameKey : exerciseBodyPositioningName,
       descriptionKey : description
     };
   }
