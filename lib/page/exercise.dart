@@ -9,6 +9,8 @@ void pushExerciseOverview(BuildContext context) {
       context,
       MaterialPageRoute(
         builder: (BuildContext ctx) => const ExercisePage()));
+  }, onError: (de, st) {
+    // todo handle DatabaseException
   });
 }
 

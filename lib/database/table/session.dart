@@ -1,6 +1,12 @@
 import 'package:wolog/database/table/mappable_entity.dart';
 
 class Session implements MappableEntity {
+  static const String dateTimestampKey = "DateTimestamp";
+  static const String exerciseNameKey = "ExerciseName";
+  static const String exerciseLeaningPositionNameKey = "ExerciseLeaningPositionName";
+  static const String exerciseLeaningPositionEquipmentNameKey = "ExerciseLeaningPositionEquipmentName";
+  static const String descriptionKey = "Description";
+  
   final int dateTimestamp;
   final String exerciseName;
   final String exerciseLeaningPositionName;
@@ -16,25 +22,25 @@ class Session implements MappableEntity {
   });
 
   Session.fromMap(Map<String,Object?> m) :
-    dateTimestamp = m["DateTimestamp"] as int,
-    exerciseName = m["ExerciseName"] as String,
-    exerciseLeaningPositionName = m['ExerciseLeaningPositionName'] as String,
-    exerciseLeaningPositionEquipmentName = m['ExerciseLeaningPositionEquipmentName'] as String,
-    description = m["Description"] as String;
+    dateTimestamp = m[dateTimestampKey] as int,
+    exerciseName = m[exerciseNameKey]as String,
+    exerciseLeaningPositionName = m[exerciseLeaningPositionNameKey] as String,
+    exerciseLeaningPositionEquipmentName = m[exerciseLeaningPositionEquipmentNameKey] as String,
+    description = m[descriptionKey] as String;
 
   @override
   List<String> getPrimaryKeyInMap() {
-    return [ "DateTimestamp", "ExerciseName", "ExerciseLeaningPositionName", "ExerciseLeaningPositionEquipmentName" ];
+    return [ dateTimestampKey, exerciseNameKey, exerciseLeaningPositionNameKey, exerciseLeaningPositionEquipmentNameKey ];
   }
 
   @override
   Map<String, Object?> toMap() {
     return {
-      "DateTimestamp" : dateTimestamp,
-      "ExerciseName" : exerciseName,
-      'ExerciseLeaningPositionName' : exerciseLeaningPositionName,
-      'ExerciseLeaningPositionEquipmentName' : exerciseLeaningPositionEquipmentName,
-      "Description" : description
+      dateTimestampKey : dateTimestamp,
+      exerciseNameKey : exerciseName,
+      exerciseLeaningPositionNameKey : exerciseLeaningPositionName,
+      exerciseLeaningPositionEquipmentNameKey : exerciseLeaningPositionEquipmentName,
+      descriptionKey : description
     };
   }
 

@@ -1,6 +1,15 @@
 import 'package:wolog/database/table/mappable_entity.dart';
 
 class Performance implements MappableEntity {
+  static const String sessionDateTimestampKey = "SessionDateTimestamp";
+  static const String sessionExerciseNameKey = "SessionExerciseName";
+  static const String sessionExerciseLeaningPositionNameKey = "SessionExerciseLeaningPositionName";
+  static const String sessionExerciseLeaningPositionEquipmentNameKey = "SessionExerciseLeaningPositionEquipmentName";
+  static const String setNoKey = "SetNo";
+  static const String repsKey = "Reps";
+  static const String weightKgKey = "WeightKg";
+  static const String descriptionKey = "Description";
+
   final int sessionDateTimestamp;
   final String sessionExerciseName;
   final String sessionExerciseLeaningPositionName;
@@ -22,31 +31,31 @@ class Performance implements MappableEntity {
   });
 
   Performance.fromMap(Map<String, Object?> m) :
-    sessionDateTimestamp = m["SessionDateTimestamp"] as int,
-    sessionExerciseName = m["SessionExerciseName"] as String,
-    sessionExerciseLeaningPositionName = m["SessionExerciseLeaningPositionName"] as String,
-    sessionExerciseLeaningPositionEquipmentName = m["SessionExerciseLeaningPositionEquipmentName"] as String,
-    setNo = m["SetNo"] as int,
-    reps = m["Reps"] as int,
-    weightKg = m["WeightKg"] as double,
-    description = m["Description"] as String;
+    sessionDateTimestamp = m[sessionDateTimestampKey] as int,
+    sessionExerciseName = m[sessionExerciseNameKey] as String,
+    sessionExerciseLeaningPositionName = m[sessionExerciseLeaningPositionNameKey] as String,
+    sessionExerciseLeaningPositionEquipmentName = m[sessionExerciseLeaningPositionEquipmentNameKey] as String,
+    setNo = m[setNoKey] as int,
+    reps = m[repsKey] as int,
+    weightKg = m[weightKgKey] as double,
+    description = m[descriptionKey] as String;
 
   @override
   List<String> getPrimaryKeyInMap() {
-    return [ "SessionDateTimestamp", "SessionExerciseName", "SessionExerciseLeaningPositionName", "SessionExerciseLeaningPositionEquipmentName", "SetNo" ];
+    return [ sessionDateTimestampKey, sessionExerciseNameKey, sessionExerciseLeaningPositionNameKey, sessionExerciseLeaningPositionEquipmentNameKey, setNoKey ];
   }
 
   @override
   Map<String, Object?> toMap() {
     return {
-      "SessionDateTimestamp" : sessionDateTimestamp,
-      "SessionExerciseName" : sessionExerciseName,
-      "SessionExerciseLeaningPositionName" : sessionExerciseLeaningPositionName,
-      "SessionExerciseLeaningPositionEquipmentName" : sessionExerciseLeaningPositionEquipmentName,
-      "SetNo" : setNo,
-      "Reps" : reps,
-      "WeightKg" : weightKg,
-      "Description" : description
+      sessionDateTimestampKey : sessionDateTimestamp,
+      sessionExerciseNameKey : sessionExerciseName,
+      sessionExerciseLeaningPositionNameKey : sessionExerciseLeaningPositionName,
+      sessionExerciseLeaningPositionEquipmentNameKey : sessionExerciseLeaningPositionEquipmentName,
+      setNoKey : setNo,
+      repsKey : reps,
+      weightKgKey : weightKg,
+      descriptionKey : description
     };
   }
 }

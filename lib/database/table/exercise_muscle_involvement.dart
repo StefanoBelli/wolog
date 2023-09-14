@@ -1,6 +1,13 @@
 import 'package:wolog/database/table/mappable_entity.dart';
 
 class ExerciseMuscleInvolvement implements MappableEntity {
+  static const String musclePartNameKey = "MusclePartName";
+  static const String muscleNameKey = "MuscleName";
+  static const String exerciseNameKey = "ExerciseName";
+  static const String exerciseLeaningPositionNameKey = "ExerciseLeaningPositionName";
+  static const String exerciseLeaningPositionEquipmentNameKey = "ExerciseLeaningPositionEquipmentName";
+  static const String descriptionKey = "Description";
+
   final String? musclePartName;
   final String muscleName;
   final String exerciseName;
@@ -18,27 +25,27 @@ class ExerciseMuscleInvolvement implements MappableEntity {
   });
 
   ExerciseMuscleInvolvement.fromMap(Map<String, Object?> m) :
-    musclePartName = m['MusclePartName'] as String,
-    muscleName = m['MuscleName'] as String,
-    exerciseName = m['ExerciseName'] as String,
-    exerciseLeaningPositionName = m['ExerciseLeaningPositionName'] as String,
-    exerciseLeaningPositionEquipmentName = m['ExerciseLeaningPositionEquipmentName'] as String,
-    description = m['Description'] as String;
+    musclePartName = m[musclePartNameKey] as String,
+    muscleName = m[muscleNameKey] as String,
+    exerciseName = m[exerciseNameKey] as String,
+    exerciseLeaningPositionName = m[exerciseLeaningPositionNameKey] as String,
+    exerciseLeaningPositionEquipmentName = m[exerciseLeaningPositionEquipmentNameKey] as String,
+    description = m[descriptionKey] as String;
     
   @override
   List<String> getPrimaryKeyInMap() {
-    return [ 'MusclePartName', 'MuscleName', 'ExerciseName', 'ExerciseLeaningPositionName', 'ExerciseLeaningPositionEquipmentName' ];
+    return [ musclePartNameKey, muscleNameKey, exerciseNameKey, exerciseLeaningPositionNameKey, exerciseLeaningPositionEquipmentNameKey ];
   }
 
   @override
   Map<String, Object?> toMap() {
     return {
-      'MusclePartName' : musclePartName,
-      'MuscleName' : muscleName,
-      'ExerciseName' : exerciseName,
-      'ExerciseLeaningPositionName' : exerciseLeaningPositionName,
-      'ExerciseLeaningPositionEquipmentName' : exerciseLeaningPositionEquipmentName,
-      'Description' : description
+      musclePartNameKey : musclePartName,
+      muscleNameKey : muscleName,
+      exerciseNameKey : exerciseName,
+      exerciseLeaningPositionNameKey : exerciseLeaningPositionName,
+      exerciseLeaningPositionEquipmentNameKey : exerciseLeaningPositionEquipmentName,
+      descriptionKey : description
     };
   }
 }

@@ -1,6 +1,11 @@
 import 'package:wolog/database/table/mappable_entity.dart';
 
 class MusclePart implements MappableEntity {
+  static const String nameKey = "Name";
+  static const String muscleNameKey = "MuscleName";
+  static const String iconNameKey = "IconName";
+  static const String descriptionKey = "Description";
+
   final String? name;
   final String muscleName;
   final String? iconName;
@@ -13,25 +18,25 @@ class MusclePart implements MappableEntity {
     required this.description
   });
 
-  MusclePart.fromMap(Map<String, Object?> map) :
-    name = map['Name'] as String,
-    muscleName = map['MuscleName'] as String,
-    iconName = map['IconName'] as String,
-    description = map['Description'] as String;
+  MusclePart.fromMap(Map<String, Object?> m) :
+    name = m[nameKey] as String,
+    muscleName = m[muscleNameKey] as String,
+    iconName = m[iconNameKey] as String,
+    description = m[descriptionKey] as String;
+    
+  @override
+  List<String> getPrimaryKeyInMap() {
+    return [ nameKey, muscleNameKey ];
+  }
   
   @override
   Map<String, Object?> toMap() {
     return {
-      'Name' : name,
-      'MuscleName' : muscleName,
-      'IconName' : iconName,
-      'Description' : description
+      nameKey : name,
+      muscleNameKey : muscleName,
+      iconNameKey : iconName,
+      descriptionKey : description
     };
-  }
-  
-  @override
-  List<String> getPrimaryKeyInMap() {
-    return [ 'Name', 'MuscleName' ];
   }
 }
 

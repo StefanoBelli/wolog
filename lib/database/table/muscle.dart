@@ -1,9 +1,15 @@
 import 'mappable_entity.dart';
 
 class Muscle implements MappableEntity {
+  static const String nameKey = "Name";
+  static const String frontalKey = "Frontal";
+  static const String upperBodyKey = "UpperBody";
+  static const String iconNameKey = "IconName";
+  static const String descriptionKey = "Description";
+
   final String name;
-  final bool frontal;
-  final bool upperBody;
+  final int frontal;
+  final int upperBody;
   final String? iconName;
   final String? description;
 
@@ -15,28 +21,27 @@ class Muscle implements MappableEntity {
     required this.description
   });
 
-  Muscle.fromMap(Map<String, Object?> map) :
-    name = map['Name'] as String,
-    frontal = map['Frontal'] as bool,
-    upperBody = map['UpperBody'] as bool,
-    iconName = map['IconName'] as String,
-    description = map['Description'] as String;
+  Muscle.fromMap(Map<String, Object?> m) :
+    name = m[nameKey] as String,
+    frontal = m[frontalKey] as int,
+    upperBody = m[upperBodyKey] as int,
+    iconName = m[iconNameKey] as String,
+    description = m[descriptionKey] as String;
 
-  
+  @override
+  List<String> getPrimaryKeyInMap() {
+    return [ nameKey ];
+  }
+
   @override
   Map<String, Object?> toMap() {
     return {
-      'Name' : name,
-      'Frontal' : frontal,
-      'UpperBody' : upperBody,
-      'IconName' : iconName,
-      'Description' : description
+      nameKey : name,
+      frontalKey : frontal,
+      upperBodyKey : upperBody,
+      iconNameKey : iconName,
+      descriptionKey : description
     };
-  }
-  
-  @override
-  List<String> getPrimaryKeyInMap() {
-    return [ 'Name' ];
   }
 }
 

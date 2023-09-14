@@ -1,6 +1,12 @@
 import 'package:wolog/database/table/mappable_entity.dart';
 
 class Exercise implements MappableEntity {
+  static const String nameKey = "Name";
+  static const String leaningPositionNameKey = "LeaningPositionName";
+  static const String leaningPositionEquipmentNameKey = "LeaningPositionEquipmentName";
+  static const String iconNameKey = "IconName";
+  static const String descriptionKey = "Description";
+  
   final String name;
   final String leaningPositionName;
   final String? leaningPositionEquipmentName;
@@ -15,27 +21,27 @@ class Exercise implements MappableEntity {
     required this.description
   });
 
-  Exercise.fromMap(Map<String, Object?> map) :
-    name = map['Name'] as String,
-    leaningPositionName = map['LeaningPositionName'] as String,
-    leaningPositionEquipmentName = map['LeaningPositionEquipmentName'] as String,
-    iconName = map['IconName'] as String,
-    description = map['Description'] as String;
+  Exercise.fromMap(Map<String, Object?> m) :
+    name = m[nameKey] as String,
+    leaningPositionName = m[leaningPositionNameKey] as String,
+    leaningPositionEquipmentName = m[leaningPositionEquipmentNameKey] as String,
+    iconName = m[iconNameKey] as String,
+    description = m[descriptionKey] as String;
+   
+  @override
+  List<String> getPrimaryKeyInMap() {
+    return [ nameKey, leaningPositionNameKey, leaningPositionEquipmentNameKey ];
+  }
   
   @override
   Map<String, Object?> toMap() {
     return {
-      'Name' : name,
-      'LeaningPositionName' : leaningPositionName,
-      'LeaningPositionEquipmentName' : leaningPositionEquipmentName,
-      'IconName' : iconName,
-      'Description' : description
+      nameKey : name,
+      leaningPositionNameKey : leaningPositionName,
+      leaningPositionEquipmentNameKey : leaningPositionEquipmentName,
+      iconNameKey : iconName,
+      descriptionKey : description
     };
-  }
-  
-  @override
-  List<String> getPrimaryKeyInMap() {
-    return [ 'Name', 'LeaningPositionName', 'LeaningPositionEquipmentName' ];
   }
 }
 

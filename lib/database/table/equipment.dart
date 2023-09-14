@@ -1,6 +1,10 @@
 import 'mappable_entity.dart';
 
 class Equipment implements MappableEntity {
+  static const String nameKey = "Name";
+  static const String iconNameKey = "IconName";
+  static const String descriptionKey = "Description";
+
   final String name;
   final String? iconName;
   final String? description;
@@ -11,24 +15,23 @@ class Equipment implements MappableEntity {
     required this.description
   });
 
-  Equipment.fromMap(Map<String, Object?> map) :
-    name = map['Name'] as String,
-    iconName = map['IconName'] as String,
-    description = map['Description'] as String;
+  Equipment.fromMap(Map<String, Object?> m) :
+    name = m[nameKey] as String,
+    iconName = m[iconNameKey] as String,
+    description = m[descriptionKey] as String;
 
-  
+  @override
+  List<String> getPrimaryKeyInMap() {
+    return [ nameKey ];
+  }
+
   @override
   Map<String, Object?> toMap() {
     return {
-      'Name' : name,
-      'IconName' : iconName,
-      'Description' : description
+      nameKey : name,
+      iconNameKey : iconName,
+      descriptionKey : description
     };
-  }
-  
-  @override
-  List<String> getPrimaryKeyInMap() {
-    return [ 'Name' ];
   }
 }
 
