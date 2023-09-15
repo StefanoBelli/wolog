@@ -73,7 +73,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
   double? _downloadStatusValue;
   int? _downloadStatusValuePercentage;
 
-  static const String _defaultUrl = "https://www.sqlitetutorial.net/wp-content/uploads/2018/03/chinook.zip";
+  static const String _defaultUrl = "";
 
   // util
 
