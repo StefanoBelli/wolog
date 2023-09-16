@@ -246,6 +246,11 @@ class _ImportExistingDbState extends State<StatefulWidget> {
                 title: const Text("Copy from my own device storage"),
                 leading: _getTileRadioLeader(_ObtainDatabaseChoice.deviceStorage),
               ),
+              const Text("App performs some weak checks on chosen database file and"
+                   " by passing them, that doesn't automatically mean that db schema"
+                   " is the one which is coherent with the one the app expects."
+                   " If this is the condition, you will encounter strange errors and"
+                   " unexpected behaviours - just clear app data and import a valid db."),
               TextButton(
                 onPressed: _isObtainingDatabase ? null : () => _handleObtainingDatabase(),
                 child: const Text("Ok")
@@ -256,7 +261,8 @@ class _ImportExistingDbState extends State<StatefulWidget> {
                     const Text("Downloading via HTTP...", textAlign: TextAlign.left,),
                     if(_downloadStatusValuePercentage != null) 
                       Text("$_downloadStatusValuePercentage%", textAlign: TextAlign.right,)],),
-              if(_isObtainingDbViaHttp) LinearProgressIndicator(value: _downloadStatusValue,)
+              if(_isObtainingDbViaHttp) 
+                LinearProgressIndicator(value: _downloadStatusValue,)
             ]),)),
       onWillPop: () async {
         if(_isObtainingDatabase) {

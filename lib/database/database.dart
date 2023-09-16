@@ -5,6 +5,10 @@ import 'dart:io';
 
 const String ddlStmts =
   ''
+  'CREATE TABLE WologMagic('
+  '  magic INTEGER PRIMARY KEY NOT NULL);'
+  'INSERT INTO WologMagic(magic) VALUES(789456123);'
+  ''
   'CREATE TABLE Icon('
   '  Name TEXT PRIMARY KEY NOT NULL,'
   '  Filename TEXT UNIQUE NOT NULL,'
@@ -116,25 +120,40 @@ const String ddlStmts =
 
 Future<Database> getDatabase() async {
   final String dbPath = await getDatabaseFilePath();
+  final _DbOnFs dbOnFs = _getDbOnFsInfo(dbPath);
 
-  if(_isDatabase(dbPath)) {
-    return openDatabase(
-        dbPath,
-        onCreate: (db, ver) async {
-          Batch batch = db.batch();
-          ddlStmts.split(';')
-              .forEach((stmt) =>
-              batch.execute(stmt));
-          await batch.commit();
-        },
-        version: 1
-    );
+  Future<void> Function (Database, int) onCreateFn;
+  if(dbOnFs == _DbOnFs.valid) {
+    print("valid db");
+    onCreateFn = (_,__) async {};
+  } else if(dbOnFs == _DbOnFs.doesNotExist) {
+    print("does not exist");
+    onCreateFn = (db, ver) async {
+        print("pushing tables");
+        Batch batch = db.batch();
+        ddlStmts.split(';')
+            .forEach((stmt) =>
+            batch.execute(stmt));
+        await batch.commit();
+      };
+  } else {
+    throw Exception("this is not a SQLite database file");
   }
 
-  throw ArgumentError();
+  return openDatabase(
+    dbPath,
+    version: 1,
+    onCreate: onCreateFn
+  );
 }
 
-bool _isDatabase(String dbPath) {
+enum _DbOnFs {
+  valid,
+  invalid,
+  doesNotExist
+}
+
+_DbOnFs _getDbOnFsInfo(String dbPath) {
   File dbf = File(dbPath);
   if(dbf.existsSync()) {
     if(dbf.statSync().size >= 16) {
@@ -149,13 +168,14 @@ bool _isDatabase(String dbPath) {
       List<int> dbBuffer = dbRaf.readSync(16).toList();
       dbRaf.closeSync();
 
-      return const ListEquality().equals(dbBuffer, magic);
+      return const ListEquality().equals(dbBuffer, magic) ?
+              _DbOnFs.valid : _DbOnFs.invalid;
     }
 
-    return false;
+    return _DbOnFs.invalid;
   }
 
-  return true;
+  return _DbOnFs.doesNotExist;
 }
 
 Future<void> closeDatabase(Database database) {
