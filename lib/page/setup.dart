@@ -168,8 +168,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
             if(mounted) {
               pushExercisePage(
                   context,
-                  onErrorHook: () =>
-                      setState(() => _isObtainingDatabase = false));
+                  onErrorHook: () => setState(() => _isObtainingDatabase = false));
             }
           });
         }
@@ -246,11 +245,13 @@ class _ImportExistingDbState extends State<StatefulWidget> {
                 title: const Text("Copy from my own device storage"),
                 leading: _getTileRadioLeader(_ObtainDatabaseChoice.deviceStorage),
               ),
-              const Text("WARNING: App performs some weak checks on chosen database file."
-                   " By passing them, that doesn't automatically mean that db schema"
-                   " is necessarily coherent with the one this app expects."
-                   " If this is the situation, you will encounter strange errors and"
-                   " unexpected behaviours - just clear app data and import a valid db."),
+              const Text(
+                "WARNING: App performs some weak checks on chosen database file."
+                " By passing them, that doesn't automatically mean that db schema"
+                " is necessarily coherent with the one this app expects."
+                " If this is the situation, you will encounter strange errors and"
+                " unexpected behaviours - just clear app data and import a valid db.",
+                style: TextStyle(fontSize: 15)),
               TextButton(
                 onPressed: _isObtainingDatabase ? null : () => _handleObtainingDatabase(),
                 child: const Text("Ok")

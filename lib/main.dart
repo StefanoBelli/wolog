@@ -57,9 +57,9 @@ class _InitialPageState extends State<StatefulWidget> {
           pushExercisePage(
               context,
               onErrorHook: () => showAppBlockingDialog(
-                  context,
-                  'Corrupted database',
-                  'Data is cleared, restart app to setup'));
+                context,
+                'Corrupted database',
+                'Data is cleared, restart app to setup'));
         } else {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const NoDbFoundPage()));

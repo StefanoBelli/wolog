@@ -6,7 +6,8 @@ import 'dart:io';
 import 'package:wolog/util.dart';
 
 void _corruptedDatabaseHandler(
-    void Function()? postHook, BuildContext c, Object e, StackTrace s) async {
+  void Function()? postHook, BuildContext c, Object e, StackTrace s) async {
+
   File(await getDatabaseFilePath()).deleteSync();
 
   if(c.mounted) {
@@ -20,8 +21,7 @@ void _corruptedDatabaseHandler(
 
 void pushExercisePage(BuildContext context, {void Function()? onErrorHook}) {
   getDatabase().then((dbInst) {
-      dbInst.rawQuery(
-          "SELECT magic FROM WologMagic WHERE magic = 789456123;").then((m) {
+      dbInst.rawQuery("SELECT magic FROM WologMagic WHERE magic = 789456123;").then((m) {
         if(m.length == 1) {
           DbHolder.getInstance()?.database = dbInst;
           Navigator.of(context).popUntil((route) => route.isFirst);
