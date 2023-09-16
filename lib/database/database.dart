@@ -145,12 +145,29 @@ Future<Database> getDatabase() async {
     version: 1,
     onCreate: onCreateFn
   );
+
+  /*
+  if(_hasValidDatabase(dbPath)) {
+    return openDatabase(
+      dbPath,
+      version: 1,
+      onCreate:(db, ver) async {
+        Batch batch = db.batch();
+        ddlStmts.split(';')
+            .forEach((stmt) =>
+            batch.execute(stmt));
+        await batch.commit();
+      }, );
+  }
+
+  throw Exception("this is not a SQLite database file");
+  */
 }
 
 enum _DbOnFs {
   valid,
-  invalid,
-  doesNotExist
+  doesNotExist,
+  invalid
 }
 
 _DbOnFs _getDbOnFsInfo(String dbPath) {
@@ -169,7 +186,7 @@ _DbOnFs _getDbOnFsInfo(String dbPath) {
       dbRaf.closeSync();
 
       return const ListEquality().equals(dbBuffer, magic) ?
-              _DbOnFs.valid : _DbOnFs.invalid;
+        _DbOnFs.valid : _DbOnFs.invalid;
     }
 
     return _DbOnFs.invalid;

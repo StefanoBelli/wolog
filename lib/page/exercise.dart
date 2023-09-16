@@ -33,10 +33,12 @@ void pushExercisePage(BuildContext context, {void Function()? onErrorHook}) {
           try {
             throw Exception("database does not contain a valid wolog magic number");
           } catch(e, st) {
+            closeDatabase(dbInst);
             _corruptedDatabaseHandler(onErrorHook, context, e as Exception, st);
           }
         }
       }, onError: (de, st) {
+        closeDatabase(dbInst);
         _corruptedDatabaseHandler(onErrorHook, context, de, st);
       });
     },
