@@ -124,12 +124,9 @@ Future<Database> getDatabase() async {
 
   Future<void> Function (Database, int) onCreateFn;
   if(dbOnFs == _DbOnFs.valid) {
-    print("valid db");
     onCreateFn = (_,__) async {};
   } else if(dbOnFs == _DbOnFs.doesNotExist) {
-    print("does not exist");
     onCreateFn = (db, ver) async {
-        print("pushing tables");
         Batch batch = db.batch();
         ddlStmts.split(';')
             .forEach((stmt) =>
@@ -145,23 +142,6 @@ Future<Database> getDatabase() async {
     version: 1,
     onCreate: onCreateFn
   );
-
-  /*
-  if(_hasValidDatabase(dbPath)) {
-    return openDatabase(
-      dbPath,
-      version: 1,
-      onCreate:(db, ver) async {
-        Batch batch = db.batch();
-        ddlStmts.split(';')
-            .forEach((stmt) =>
-            batch.execute(stmt));
-        await batch.commit();
-      }, );
-  }
-
-  throw Exception("this is not a SQLite database file");
-  */
 }
 
 enum _DbOnFs {

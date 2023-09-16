@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:wolog/util.dart';
 
 void _corruptedDatabaseHandler(
-    void Function()? postHook, BuildContext c, Exception e, StackTrace s) async {
+    void Function()? postHook, BuildContext c, Object e, StackTrace s) async {
   File(await getDatabaseFilePath()).deleteSync();
 
   if(c.mounted) {
@@ -33,12 +33,12 @@ void pushExercisePage(BuildContext context, {void Function()? onErrorHook}) {
           try {
             throw Exception("database does not contain a valid wolog magic number");
           } catch(e, st) {
-            closeDatabase(dbInst);
-            _corruptedDatabaseHandler(onErrorHook, context, e as Exception, st);
+            closeDatabase(dbInst);  // valid and opened db
+            _corruptedDatabaseHandler(onErrorHook, context, e, st);
           }
         }
       }, onError: (de, st) {
-        closeDatabase(dbInst);
+        closeDatabase(dbInst);  // valid and opened db
         _corruptedDatabaseHandler(onErrorHook, context, de, st);
       });
     },

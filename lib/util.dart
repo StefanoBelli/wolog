@@ -18,14 +18,24 @@ void _showNonDismissibleDialog(BuildContext c, AlertDialog Function(BuildContext
       onWillPop: () async { return false; }));
 }
 
-void showExceptionDialog(BuildContext c, Exception e, StackTrace s) {
+void showExceptionDialog(BuildContext c, Object e, StackTrace s) {
   _showNonDismissibleDialog(c, (c) => AlertDialog(
-    title: const Text("Exception log"),
-    content: Column(
+    title: const Row(
       children: [
-        const Text("App encountered an exception while running:"),
-        Text(e.toString()),
-        Text(s.toString())
+        Icon(Icons.error, size: 28),
+        Padding(padding: EdgeInsetsDirectional.only(end:7)),
+        Text("Exception log")
+      ]),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text("Message", style: TextStyle(fontSize: 20),),
+        Flexible(child: SingleChildScrollView(
+          child: Text(e.toString())
+          )),
+        const Text("Stack trace", style: TextStyle(fontSize: 20)),
+        Flexible(child: SingleChildScrollView(
+          child:  Text(s.toString())))
       ],
     ),
     actions: [
