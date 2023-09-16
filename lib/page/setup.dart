@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:wolog/database/database.dart';
 import 'package:wolog/page/exercise.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 
 import 'package:wolog/util.dart';
 
-Widget _buildBasicTwoOptsPage(
-      BuildContext context,
-      String title,
-      String firstOptBrief,
-      String secondOptBrief,
-      void Function() firstOptFun,
-      void Function() secondOptFun) =>
+class NoDbFoundPage extends StatelessWidget {
+  const NoDbFoundPage({super.key});
+
+  @override
+  Widget build(BuildContext context) =>
     Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -20,36 +20,22 @@ Widget _buildBasicTwoOptsPage(
           Column(
             mainAxisAlignment: MainAxisAlignment.center, 
             children: [
-              Text(
-                title, 
-                style: const TextStyle(fontSize: 30)
+              const Text(
+                "No database found", 
+                style: TextStyle(fontSize: 30)
               ),
               TextButton(
-                onPressed: firstOptFun, 
-                child: Text(firstOptBrief)
+                onPressed: () => pushExercisePage(context),
+                child: const Text("Create new database")
               ),
               TextButton(
-                onPressed: secondOptFun, 
-                child: Text(secondOptBrief)
+                onPressed: () =>
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (_) => const _ImportExistingDbPage())),
+                child: const Text("Import existing database...")
               )
             ])));
-
-class NoDbFoundPage extends StatelessWidget {
-  const NoDbFoundPage({super.key});
-
-  @override
-  Widget build(BuildContext context) =>
-    _buildBasicTwoOptsPage(
-      context, 
-      "No database found", 
-      "Create new database...", 
-      "Import existing database...", 
-      () => pushExerciseOverview(context),
-      () => Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (c) => const _ImportExistingDbPage()))
-    );
 }
 
 enum _ObtainDatabaseChoice {
@@ -75,7 +61,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
 
   static const String _defaultUrl = "";
 
-  // util
+  // start util fns
 
   void _stopUiHttpDlStatusValue() {
     setState(() {
@@ -109,16 +95,19 @@ class _ImportExistingDbState extends State<StatefulWidget> {
     return uri;
   }
 
-  // util
+  // end util fns
   
-  void _copyAsAppDbAndGo(File dbFile) {
-    // todo
-    //pushExerciseOverview(context);
+  Future<void> _copyAsAppDb(File dbFile) async {
+    File appDbFile = File(await getDatabaseFilePath());
+    await appDbFile.writeAsBytes(await dbFile.readAsBytes(), flush: true);
   }
 
-  File _saveInDownloads(List<int> httpBodyBytes) {
-    // todo
-    return File("");
+  Future<File> _saveInDownloads(List<int> httpBodyBytes) async {
+    Directory? tmpDir = await getTemporaryDirectory();
+    File wologDbFile = File("${tmpDir.path}/wolog.db");
+    await wologDbFile.writeAsBytes(httpBodyBytes, flush: true);
+
+    return wologDbFile;
   }
 
   void _setByteStreamListener(http.ByteStream bodyByteStream, int? contentLength){
@@ -142,12 +131,22 @@ class _ImportExistingDbState extends State<StatefulWidget> {
     bodyByteStream.listen(
       onDataFn, 
       onError: (e) {
-        _stopUiHttpDlStatusValue();
         _goodShowSnackBar("Errored while downloading");
+        _stopUiHttpDlStatusValue();
       }, 
       onDone: () {
-        _stopUiHttpDlStatusValue();
-        _copyAsAppDbAndGo(_saveInDownloads(bodyBytes));
+        _saveInDownloads(bodyBytes).then(
+          (dbFile) {
+            _copyAsAppDb(dbFile).then((_) {
+              pushExercisePage(
+                  context,
+                  onErrorHook: () => _stopUiHttpDlStatusValue());
+            });
+          },
+          onError: (ae) {
+            _goodShowSnackBar((ae as ArgumentError).message);
+            _stopUiHttpDlStatusValue();
+          });
       }, 
       cancelOnError: true
     );
@@ -165,12 +164,19 @@ class _ImportExistingDbState extends State<StatefulWidget> {
         String? pickedPath = filePickerResult.files.single.path;
 
         if(pickedPath != null) {
-          _copyAsAppDbAndGo(File(pickedPath));
+          _copyAsAppDb(File(pickedPath)).then((_) {
+            if(mounted) {
+              pushExercisePage(
+                  context,
+                  onErrorHook: () =>
+                      setState(() => _isObtainingDatabase = false));
+            }
+          });
+        }
         } else {
           _goodShowSnackBar("pickedPath == null, please report this bug");
         }
-      } 
-      
+
       setState(() => _isObtainingDatabase = false);
     } else {
       Uri? parsedUri = _getUri();

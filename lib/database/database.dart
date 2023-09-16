@@ -1,5 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:collection/collection.dart';
+import 'dart:io';
 
 const String ddlStmts =
   ''
@@ -111,19 +113,49 @@ const String ddlStmts =
   '      SessionExerciseBodyPositioningName, SetNo))'
   ''
   ;
- 
+
 Future<Database> getDatabase() async {
-  return openDatabase(
-    await getDatabaseFilePath(),
-    onCreate: (db, ver) async {
-      Batch batch = db.batch();
-      ddlStmts.split(';')
-        .forEach((stmt) =>
-          batch.execute(stmt));
-      await batch.commit();
-    },
-    version: 1
-  );
+  final String dbPath = await getDatabaseFilePath();
+
+  if(_isDatabase(dbPath)) {
+    return openDatabase(
+        dbPath,
+        onCreate: (db, ver) async {
+          Batch batch = db.batch();
+          ddlStmts.split(';')
+              .forEach((stmt) =>
+              batch.execute(stmt));
+          await batch.commit();
+        },
+        version: 1
+    );
+  }
+
+  throw ArgumentError();
+}
+
+bool _isDatabase(String dbPath) {
+  File dbf = File(dbPath);
+  if(dbf.existsSync()) {
+    if(dbf.statSync().size >= 16) {
+      const List<int> magic =
+        [
+          0x53, 0x51, 0x4C, 0x69,
+          0x74, 0x65, 0x20, 0x66,
+          0x6F, 0x72, 0x6D, 0x61,
+          0x74, 0x20, 0x33, 0x00
+        ];
+      RandomAccessFile dbRaf = dbf.openSync();
+      List<int> dbBuffer = dbRaf.readSync(16).toList();
+      dbRaf.closeSync();
+
+      return const ListEquality().equals(dbBuffer, magic);
+    }
+
+    return false;
+  }
+
+  return true;
 }
 
 Future<void> closeDatabase(Database database) {

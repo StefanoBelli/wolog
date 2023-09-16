@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:wolog/database/database.dart';
 import 'package:wolog/page/exercise.dart';
 import 'package:wolog/page/setup.dart';
+import 'package:wolog/util.dart';
 
 void main() {
   runApp(const WologApp());
@@ -53,7 +54,12 @@ class _InitialPageState extends State<StatefulWidget> {
     if(_checkedDatabaseExistence) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_databaseExists) {
-          pushExerciseOverview(context);
+          pushExercisePage(
+              context,
+              onErrorHook: () => showAppBlockingDialog(
+                  context,
+                  'Corrupted database',
+                  'Data is cleared, restart app to setup'));
         } else {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const NoDbFoundPage()));

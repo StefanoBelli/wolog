@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:wolog/dbholder.dart';
 import 'package:wolog/database/database.dart';
+import 'dart:io';
 
-void pushExerciseOverview(BuildContext context) {
+void pushExercisePage(
+    BuildContext context, {void Function()? onErrorHook}) {
+
   getDatabase().then((dbInst) {
-    DbHolder.getInstance()?.database = dbInst;
+      DbHolder.getInstance()?.database = dbInst;
+      Navigator.of(context).popUntil((route) => route.isFirst);
 
-    Navigator.of(context).popUntil((route) => route.isFirst);
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext ctx) => const ExercisePage()));
-  }, onError: (de, st) {
-    // todo handle DatabaseException
-  });
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(
+              builder: (BuildContext ctx) => const ExercisePage()));
+    },
+    onError: (de, st) async {
+      File(await getDatabaseFilePath()).deleteSync();
+      //showExceptionDialog
+      if(onErrorHook != null) {
+        onErrorHook();
+      }
+    }
+  );
 }
 
 class ExercisePage extends StatelessWidget {
