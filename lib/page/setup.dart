@@ -72,6 +72,20 @@ class _ImportExistingDbState extends State<StatefulWidget> {
     });
   }
 
+  void _stopUiNoHttpDlRetrieval() {
+    setState(() => _isObtainingDatabase = false);
+  }
+  
+  void _stopUiNoHttpDlRetrievalErrored(final String errorMessage) {
+    _goodShowSnackBar(errorMessage);
+    _stopUiNoHttpDlRetrieval();
+  }
+
+  void _stopUiHttpDlStatusValueErrored(final String errorMessage) {
+    _goodShowSnackBar(errorMessage);
+    _stopUiHttpDlStatusValue();
+  }
+
   void _goodShowSnackBar(final String message) {
     if(mounted) {
       showSnackBar(context, message);
@@ -137,8 +151,8 @@ class _ImportExistingDbState extends State<StatefulWidget> {
     bodyByteStream.listen(
       onDataFn, 
       onError: (final e) {
-        _goodShowSnackBar('Errored while downloading');
-        _stopUiHttpDlStatusValue();
+        _stopUiHttpDlStatusValueErrored(
+          'Errored while downloading (maybe internet is gone?)');
       }, 
       onDone: () {
         _saveInDownloads(bodyBytes).then(
@@ -150,8 +164,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
             });
           },
           onError: (final ae) {
-            _goodShowSnackBar((ae as ArgumentError).message);
-            _stopUiHttpDlStatusValue();
+            _stopUiHttpDlStatusValueErrored((ae as ArgumentError).message);
           });
       }, 
       cancelOnError: true
@@ -170,14 +183,20 @@ class _ImportExistingDbState extends State<StatefulWidget> {
         if(pickedPath != null) {
           await _copyAsAppDb(File(pickedPath));
           if(mounted) {
-            pushExercisePage(context);
+            pushExercisePage(
+              context,
+              onErrorHook: _stopUiNoHttpDlRetrieval);
+          } else {
+            _stopUiNoHttpDlRetrievalErrored(
+              'context is not mounted, please report this bug');
           }
-        }
         } else {
-          _goodShowSnackBar('pickedPath == null, please report this bug');
+          _stopUiNoHttpDlRetrieval();
         }
-
-      setState(() => _isObtainingDatabase = false);
+      } else {
+        _stopUiNoHttpDlRetrievalErrored(
+          'pickedPath == null, please report this bug');
+      }
     } else {
       final parsedUri = _getUri();
 
@@ -188,21 +207,20 @@ class _ImportExistingDbState extends State<StatefulWidget> {
         try {
           res = await req.send();
         } on Object catch(_) {
-          _goodShowSnackBar('HTTP client error (try to prepend http[s]://,'
-                            ' check internet connectivity, check hostname)');
-          setState(() => _isObtainingDatabase = false);
+          _stopUiNoHttpDlRetrievalErrored(
+            'HTTP client error (try to prepend http[s]://,'
+            ' check internet connectivity, check hostname)');
           return;
         }
 
         if (res.statusCode == 200) {
           _setByteStreamListener(res.stream, res.contentLength);
         } else {
-          _goodShowSnackBar('Server HTTP response status code is ${res.statusCode}');
-          setState(() => _isObtainingDatabase = false);
+          _stopUiNoHttpDlRetrievalErrored(
+            'Server HTTP response status code is ${res.statusCode}');
         }
       } else {
-        _goodShowSnackBar('URI parsing API reported error');
-        setState(() => _isObtainingDatabase = false);
+        _stopUiNoHttpDlRetrievalErrored('Check URL format');
       }
     }
   }
