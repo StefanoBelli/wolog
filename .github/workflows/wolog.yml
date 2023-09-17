@@ -1,3 +1,4 @@
+on: [push]
 jobs:
   android_job:
     name: "Android"
