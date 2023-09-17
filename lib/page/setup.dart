@@ -110,21 +110,27 @@ class _ImportExistingDbState extends State<StatefulWidget> {
     return wologDbFile;
   }
 
-  void _setByteStreamListener(final http.ByteStream bodyByteStream, final int? contentLength){
+  void _setByteStreamListener(final http.ByteStream bodyByteStream, final int? contentLength) {
     setState(() => _isObtainingDbViaHttp = true);
 
-    var bodyBytes = <int>[];
+    final bodyBytes = <int>[];
 
     void Function(List<int>) onDataFn;
     if(contentLength == null) {
-      onDataFn = (final data) { bodyBytes += data; };
+      onDataFn = bodyBytes.addAll;
     } else {
+      var onDataCallCount = 0;
+
       onDataFn = (final data) {
-        bodyBytes += data;
-        setState(() { 
-          _downloadStatusValue = bodyBytes.length / contentLength; 
-          _downloadStatusValuePercentage = (_downloadStatusValue! * 100).toInt();
-        });
+        bodyBytes.addAll(data);
+
+        if (onDataCallCount++ % 500 == 0) {
+          setState(() {
+            _downloadStatusValue = bodyBytes.length / contentLength;
+            _downloadStatusValuePercentage =
+                (_downloadStatusValue! * 100).toInt();
+          });
+        }
       };
     }
 
@@ -164,9 +170,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
         if(pickedPath != null) {
           await _copyAsAppDb(File(pickedPath));
           if(mounted) {
-            pushExercisePage(
-              context,
-              onErrorHook: () => setState(() => _isObtainingDatabase = false));
+            pushExercisePage(context);
           }
         }
         } else {
