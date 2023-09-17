@@ -1,4 +1,4 @@
-on: [push]
+on: [push, pull_request, release, create]
 jobs:
   android_job:
     name: "Android"
@@ -15,3 +15,9 @@ jobs:
     - run: flutter --version
     - run: flutter pub get
     - run: flutter build apk
+    - name: 'Upload build release APK'
+      uses: actions/upload-artifact@v3
+      with:
+        name: release Android apk
+        path: build/app/outputs/flutter-apk/app-release.apk
+
