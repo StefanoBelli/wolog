@@ -251,7 +251,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
                 " is necessarily coherent with the one this app expects."
                 " If this is the situation, you will encounter strange errors and"
                 " unexpected behaviours - just clear app data and import a valid db.",
-                style: TextStyle(fontSize: 15)),
+                style: TextStyle(fontSize: 13, color: Colors.redAccent)),
               TextButton(
                 onPressed: _isObtainingDatabase ? null : () => _handleObtainingDatabase(),
                 child: const Text("Ok")
