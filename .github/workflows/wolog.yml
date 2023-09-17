@@ -12,12 +12,36 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
-    - run: flutter --version
     - run: flutter pub get
     - run: flutter build apk
-    - name: 'Upload build release APK'
+    - run: mv build/app/outputs/flutter-apk/app-release.apk wolog.apk
+    - name: 'Upload built release APK'
       uses: actions/upload-artifact@v3
       with:
-        name: release Android apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+        name: Android APK
+        path: wolog.apk
+  ios_job:
+    name: "iOS"
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        architecture: x64
+    - run: flutter pub get
+    - run: flutter test
+    - run: flutter build ios --release --no-codesign
+  macos_job:
+    name: "macOS"
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        architecture: x64
+    - run: flutter pub get
+    - run: flutter config --enable-macos-desktop
+    - run: flutter build macos
 
