@@ -116,7 +116,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
     await appDbFile.writeAsBytes(await dbFile.readAsBytes(), flush: true);
   }
 
-  Future<File> _saveInDownloads(final List<int> httpBodyBytes) async {
+  Future<File> _saveInTemporary(final List<int> httpBodyBytes) async {
     final tmpDir = await getTemporaryDirectory();
     final wologDbFile = File('${tmpDir.path}/wolog.db');
     await wologDbFile.writeAsBytes(httpBodyBytes, flush: true);
@@ -155,7 +155,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
           'Errored while downloading (maybe internet is gone?)');
       }, 
       onDone: () {
-        _saveInDownloads(bodyBytes).then(
+        _saveInTemporary(bodyBytes).then(
           (final dbFile) {
             _copyAsAppDb(dbFile).then((final _) {
               pushExercisePage(
@@ -191,11 +191,11 @@ class _ImportExistingDbState extends State<StatefulWidget> {
               'context is not mounted, please report this bug');
           }
         } else {
-          _stopUiNoHttpDlRetrieval();
+          _stopUiNoHttpDlRetrievalErrored(
+            'pickedPath == null, please report this bug');
         }
       } else {
-        _stopUiNoHttpDlRetrievalErrored(
-          'pickedPath == null, please report this bug');
+        _stopUiNoHttpDlRetrieval();
       }
     } else {
       final parsedUri = _getUri();
