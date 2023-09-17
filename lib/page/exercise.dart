@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:wolog/dbholder.dart';
-import 'package:wolog/database/database.dart';
+import '../dbholder.dart';
+import '../database/database.dart';
 import 'dart:io';
 
-import 'package:wolog/util.dart';
+import '../util.dart';
 
-void _corruptedDatabaseHandler(
-  void Function()? postHook, BuildContext c, Object e, StackTrace s) async {
+Future<void> _corruptedDatabaseHandler(
+  final void Function()? postHook, final BuildContext c, final Object e, final StackTrace s) async {
 
   File(await getDatabaseFilePath()).deleteSync();
 
@@ -19,30 +19,30 @@ void _corruptedDatabaseHandler(
   }
 }
 
-void pushExercisePage(BuildContext context, {void Function()? onErrorHook}) {
-  getDatabase().then((dbInst) {
-      dbInst.rawQuery("SELECT magic FROM WologMagic WHERE magic = 789456123;").then((m) {
+void pushExercisePage(final BuildContext context, {final void Function()? onErrorHook}) {
+  getDatabase().then((final dbInst) {
+      dbInst.rawQuery('SELECT magic FROM WologMagic WHERE magic = 789456123;').then((final m) {
         if(m.length == 1) {
           DbHolder.getInstance()?.database = dbInst;
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.of(context).popUntil((final route) => route.isFirst);
 
           Navigator.pushReplacement(context,
             MaterialPageRoute(
-                builder: (BuildContext ctx) => const ExercisePage()));
+                builder: (final ctx) => const ExercisePage()));
         } else {
           try {
-            throw Exception("database does not contain a valid wolog magic number");
-          } catch(e, st) {
+            throw Exception('database does not contain a valid wolog magic number');
+          } on Exception catch(e, st) {
             closeDatabase(dbInst);  // valid and opened db
             _corruptedDatabaseHandler(onErrorHook, context, e, st);
           }
         }
-      }, onError: (de, st) {
+      }, onError: (final de, final st) {
         closeDatabase(dbInst);  // valid and opened db
         _corruptedDatabaseHandler(onErrorHook, context, de, st);
       });
     },
-    onError: (de, st) {
+    onError: (final de, final st) {
       _corruptedDatabaseHandler(onErrorHook, context, de, st);
     }
   );
@@ -52,7 +52,6 @@ class ExercisePage extends StatelessWidget {
   const ExercisePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("EXERCISE")),);
-  }
+  Widget build(final BuildContext context) => 
+    const Scaffold(body: Center(child: Text('EXERCISE')),);
 }

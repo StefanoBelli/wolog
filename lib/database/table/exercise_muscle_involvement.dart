@@ -1,12 +1,12 @@
-import 'package:wolog/database/table/mappable_entity.dart';
+import 'mappable_entity.dart';
 
 class ExerciseMuscleInvolvement implements MappableEntity {
-  static const String musclePartNameKey = "MusclePartName";
-  static const String muscleNameKey = "MuscleName";
-  static const String exerciseNameKey = "ExerciseName";
-  static const String exerciseEquipmentNameKey = "ExerciseEquipmentName";
-  static const String exerciseBodyPositioningNameKey = "ExerciseBodyPositioningName";
-  static const String descriptionKey = "Description";
+  static const String musclePartNameKey = 'MusclePartName';
+  static const String muscleNameKey = 'MuscleName';
+  static const String exerciseNameKey = 'ExerciseName';
+  static const String exerciseEquipmentNameKey = 'ExerciseEquipmentName';
+  static const String exerciseBodyPositioningNameKey = 'ExerciseBodyPositioningName';
+  static const String descriptionKey = 'Description';
 
   final String? musclePartName;
   final String muscleName;
@@ -24,22 +24,27 @@ class ExerciseMuscleInvolvement implements MappableEntity {
     required this.description
   });
 
-  ExerciseMuscleInvolvement.fromMap(Map<String, Object?> m) :
-    musclePartName = m[musclePartNameKey] as String,
-    muscleName = m[muscleNameKey] as String,
-    exerciseName = m[exerciseNameKey] as String,
-    exerciseEquipmentName = m[exerciseEquipmentNameKey] as String,
-    exerciseBodyPositioningName = m[exerciseBodyPositioningNameKey] as String,
-    description = m[descriptionKey] as String;
+  ExerciseMuscleInvolvement.fromMap(final Map<String, Object?> m) :
+    musclePartName = m[musclePartNameKey] as String?,
+    muscleName = m[muscleNameKey]! as String,
+    exerciseName = m[exerciseNameKey]! as String,
+    exerciseEquipmentName = m[exerciseEquipmentNameKey] as String?,
+    exerciseBodyPositioningName = m[exerciseBodyPositioningNameKey]! as String,
+    description = m[descriptionKey] as String?;
     
   @override
-  List<String> getPrimaryKeyInMap() {
-    return [ musclePartNameKey, muscleNameKey, exerciseNameKey, exerciseEquipmentNameKey, exerciseBodyPositioningNameKey ];
-  }
+  List<String> getPrimaryKeyInMap() => 
+    [ 
+      musclePartNameKey, 
+      muscleNameKey, 
+      exerciseNameKey, 
+      exerciseEquipmentNameKey, 
+      exerciseBodyPositioningNameKey 
+    ];
 
   @override
-  Map<String, Object?> toMap() {
-    return {
+  Map<String, Object?> toMap() => 
+    {
       musclePartNameKey : musclePartName,
       muscleNameKey : muscleName,
       exerciseNameKey : exerciseName,
@@ -47,8 +52,7 @@ class ExerciseMuscleInvolvement implements MappableEntity {
       exerciseBodyPositioningNameKey : exerciseBodyPositioningName,
       descriptionKey : description
     };
-  }
 }
 
-List<ExerciseMuscleInvolvement> getExerciseMuscleInvolvementList(List<Map<String, Object?>> l) 
-  => List.generate(l.length, (i) => ExerciseMuscleInvolvement.fromMap(l[i]));
+List<ExerciseMuscleInvolvement> getExerciseMuscleInvolvementList(final List<Map<String, Object?>> l) 
+  => List.generate(l.length, (final i) => ExerciseMuscleInvolvement.fromMap(l[i]));

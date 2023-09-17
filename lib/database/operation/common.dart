@@ -1,21 +1,22 @@
-import 'package:wolog/database/table/mappable_entity.dart';
+import '../table/mappable_entity.dart';
 
-String getWhereClause(MappableEntity mappableEntity) {
-  String whereClause = "";
-  List<String> primaryKey = mappableEntity.getPrimaryKeyInMap();
+String getWhereClause(final MappableEntity mappableEntity) {
+  final whereClauseBuffer = StringBuffer();
+  final primaryKey = mappableEntity.getPrimaryKeyInMap();
 
   for(final key in primaryKey) {
-    whereClause += "$key = ? AND ";
+    whereClauseBuffer.write('$key = ? AND ');
   }
 
-  return whereClause.substring(0, whereClause.length - 5);
+  return whereClauseBuffer.toString()
+            .substring(0, whereClauseBuffer.length - 5);
 }
 
-List<Object?> getWhereArgs(MappableEntity mappableEntity) {
-  List<String> primaryKey = mappableEntity.getPrimaryKeyInMap();
-  Map<String, Object?> m = mappableEntity.toMap();
+List<Object?> getWhereArgs(final MappableEntity mappableEntity) {
+  final primaryKey = mappableEntity.getPrimaryKeyInMap();
+  final m = mappableEntity.toMap();
   
-  List<Object?> whereArgs = [];
+  final whereArgs = <Object?>[];
 
   for(final key in primaryKey) {
     whereArgs.add(m[key]);

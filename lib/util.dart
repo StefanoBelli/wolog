@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rich_clipboard/rich_clipboard.dart';
 
-void showSnackBar(BuildContext context, String message) {
+void showSnackBar(final BuildContext context, final String message) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message), 
@@ -9,17 +9,17 @@ void showSnackBar(BuildContext context, String message) {
   );
 }
 
-void _showNonDismissibleDialog(BuildContext c, AlertDialog Function(BuildContext) dialogBuilder) {
+void _showNonDismissibleDialog(final BuildContext c, final AlertDialog Function(BuildContext) dialogBuilder) {
   showDialog(
     context: c,
     barrierDismissible: false,
-    builder: (c) => WillPopScope(
+    builder: (final c) => WillPopScope(
       child: dialogBuilder(c), 
-      onWillPop: () async { return false; }));
+      onWillPop: () async => false ));
 }
 
-void showExceptionDialog(BuildContext c, Object e, StackTrace s) {
-  _showNonDismissibleDialog(c, (c) => AlertDialog(
+void showExceptionDialog(final BuildContext c, final Object e, final StackTrace s) {
+  _showNonDismissibleDialog(c, (final c) => AlertDialog(
     title: const Row(
       children: [
         Icon(
@@ -27,17 +27,17 @@ void showExceptionDialog(BuildContext c, Object e, StackTrace s) {
           size: 28),
         Padding(
           padding: EdgeInsetsDirectional.only(end: 7)),
-        Text("Exception log")
+        Text('Exception log')
       ]),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text("Message", 
+        const Text('Message', 
           style: TextStyle(fontSize: 20),),
         Flexible(
           child: SingleChildScrollView(
             child: Text(e.toString()))),
-        const Text("Stack trace", 
+        const Text('Stack trace', 
           style: TextStyle(fontSize: 20)),
         Flexible(
           child: SingleChildScrollView(
@@ -46,23 +46,23 @@ void showExceptionDialog(BuildContext c, Object e, StackTrace s) {
     ),
     actions: [
       TextButton(
-        child: const Text("Ok"),
+        child: const Text('Ok'),
         onPressed: () => Navigator.pop(c)
       ),
       TextButton(
         onPressed: () async {
-          final String data = 
-            "\nexception:\n${e.toString()}"
-            "\nstacktrace:\n${s.toString()}";
+          final data = 
+            '\nexception:\n$e'
+            '\nstacktrace:\n$s';
           await RichClipboard.setData(RichClipboardData(text: data));
         },
-        child: const Text("Copy")),
+        child: const Text('Copy')),
     ],
   ));
 }
 
-void showAppBlockingDialog(BuildContext c, String title, String description) {
-  _showNonDismissibleDialog(c, (c) => AlertDialog(
+void showAppBlockingDialog(final BuildContext c, final String title, final String description) {
+  _showNonDismissibleDialog(c, (final c) => AlertDialog(
     title: Text(title),
     content: Text(description)
   ));

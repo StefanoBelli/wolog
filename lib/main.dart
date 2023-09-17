@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:wolog/database/database.dart';
-import 'package:wolog/page/exercise.dart';
-import 'package:wolog/page/setup.dart';
-import 'package:wolog/util.dart';
+import 'database/database.dart';
+import 'page/exercise.dart';
+import 'page/setup.dart';
+import 'util.dart';
 
 void main() {
   runApp(const WologApp());
@@ -13,8 +13,8 @@ class WologApp extends StatelessWidget {
   const WologApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(final BuildContext context) => 
+    MaterialApp(
       title: 'wolog',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
@@ -22,7 +22,6 @@ class WologApp extends StatelessWidget {
       ),
       home: const InitialPage(),
     );
-  }
 }
 
 class InitialPage extends StatefulWidget {
@@ -39,8 +38,8 @@ class _InitialPageState extends State<StatefulWidget> {
   @override
   void initState() {
     super.initState();
-    getDatabaseFilePath().then((dbFilePath) {
-      databaseExists(dbFilePath).then((dbExists) {
+    getDatabaseFilePath().then((final dbFilePath) {
+      databaseExists(dbFilePath).then((final dbExists) {
         setState(() {
           _checkedDatabaseExistence = true;
           _databaseExists = dbExists;
@@ -50,9 +49,9 @@ class _InitialPageState extends State<StatefulWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if(_checkedDatabaseExistence) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((final _) {
         if (_databaseExists) {
           pushExercisePage(
               context,
@@ -62,7 +61,7 @@ class _InitialPageState extends State<StatefulWidget> {
                 'Data is cleared, restart app to setup'));
         } else {
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const NoDbFoundPage()));
+              MaterialPageRoute(builder: (final context) => const NoDbFoundPage()));
         }
       });
     }

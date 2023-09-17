@@ -1,9 +1,9 @@
-import 'package:wolog/database/table/mappable_entity.dart';
+import 'mappable_entity.dart';
 
 class Icon implements MappableEntity {
-  static const String nameKey = "Name";
-  static const String filenameKey = "Filename";
-  static const String descriptionKey = "Description";
+  static const String nameKey = 'Name';
+  static const String filenameKey = 'Filename';
+  static const String descriptionKey = 'Description';
 
   final String name;
   final String filename;
@@ -15,25 +15,25 @@ class Icon implements MappableEntity {
     required this.description
   });
 
-  Icon.fromMap(Map<String, Object?> m) :
-    name = m[nameKey] as String,
-    filename = m[filenameKey] as String,
-    description = m[descriptionKey] as String;
+  Icon.fromMap(final Map<String, Object?> m) :
+    name = m[nameKey]! as String,
+    filename = m[filenameKey]! as String,
+    description = m[descriptionKey] as String?;
     
   @override
-  List<String> getPrimaryKeyInMap() {
-    return [ nameKey ];
-  }
+  List<String> getPrimaryKeyInMap() => 
+    [ 
+      nameKey 
+    ];
 
   @override
-  Map<String, Object?> toMap() {
-    return {
+  Map<String, Object?> toMap() => 
+    {
       nameKey : name,
       filenameKey : filename,
       descriptionKey : description
     };
-  }
 }
 
-List<Icon> getIconList(List<Map<String, Object?>> l) 
-  => List.generate(l.length, (i) => Icon.fromMap(l[i]));
+List<Icon> getIconList(final List<Map<String, Object?>> l) 
+  => List.generate(l.length, (final i) => Icon.fromMap(l[i]));

@@ -1,3 +1,5 @@
+// ignore_for_file: missing_whitespace_between_adjacent_strings, noop_primitive_operations
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:collection/collection.dart';
@@ -119,22 +121,21 @@ const String ddlStmts =
   ;
 
 Future<Database> getDatabase() async {
-  final String dbPath = await getDatabaseFilePath();
-  final _DbOnFs dbOnFs = _getDbOnFsInfo(dbPath);
+  final dbPath = await getDatabaseFilePath();
+  final dbOnFs = _getDbOnFsInfo(dbPath);
 
   Future<void> Function (Database, int) onCreateFn;
   if(dbOnFs == _DbOnFs.valid) {
-    onCreateFn = (_,__) async {};
+    onCreateFn = (final _,final __) async {};
   } else if(dbOnFs == _DbOnFs.doesNotExist) {
-    onCreateFn = (db, ver) async {
-        Batch batch = db.batch();
+    onCreateFn = (final db, final ver) async {
+        final batch = db.batch();
         ddlStmts.split(';')
-            .forEach((stmt) =>
-            batch.execute(stmt));
+            .forEach(batch.execute);
         await batch.commit();
       };
   } else {
-    throw Exception("this is not a SQLite database file");
+    throw Exception('this is not a SQLite database file');
   }
 
   return openDatabase(
@@ -150,19 +151,19 @@ enum _DbOnFs {
   invalid
 }
 
-_DbOnFs _getDbOnFsInfo(String dbPath) {
-  File dbf = File(dbPath);
+_DbOnFs _getDbOnFsInfo(final String dbPath) {
+  final dbf = File(dbPath);
   if(dbf.existsSync()) {
     if(dbf.statSync().size >= 16) {
-      const List<int> magic =
-        [
+      const magic =
+        <int>[
           0x53, 0x51, 0x4C, 0x69,
           0x74, 0x65, 0x20, 0x66,
           0x6F, 0x72, 0x6D, 0x61,
           0x74, 0x20, 0x33, 0x00
         ];
-      RandomAccessFile dbRaf = dbf.openSync();
-      List<int> dbBuffer = dbRaf.readSync(16).toList();
+      final dbRaf = dbf.openSync();
+      final dbBuffer = dbRaf.readSync(16).toList();
       dbRaf.closeSync();
 
       return const ListEquality().equals(dbBuffer, magic) ?
@@ -175,10 +176,8 @@ _DbOnFs _getDbOnFsInfo(String dbPath) {
   return _DbOnFs.doesNotExist;
 }
 
-Future<void> closeDatabase(Database database) {
-  return database.close();
-}
+Future<void> closeDatabase(final Database database) => 
+  database.close();
 
-Future<String> getDatabaseFilePath() async {
-  return join(await getDatabasesPath(), 'wolog.db');
-}
+Future<String> getDatabaseFilePath() async => 
+  join(await getDatabasesPath(), 'wolog.db');

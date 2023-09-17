@@ -5,10 +5,7 @@ class DbHolder {
 
   DbHolder._();
 
-  static DbHolder? getInstance() {
-    _instance ??= DbHolder._();
-    return _instance;
-  }
+  static DbHolder? getInstance() => _instance ??= DbHolder._();
   
   Database? database;
 }

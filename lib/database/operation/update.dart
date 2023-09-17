@@ -1,31 +1,30 @@
-import 'package:wolog/database/operation/common.dart';
-import 'package:wolog/database/table/equipment.dart';
-import 'package:wolog/database/table/exercise_muscle_involvement.dart';
-import 'package:wolog/database/table/exercise.dart';
-import 'package:wolog/database/table/icon.dart';
-import 'package:wolog/database/table/body_positioning.dart';
-import 'package:wolog/database/table/muscle_part.dart';
-import 'package:wolog/database/table/muscle.dart';
-import 'package:wolog/database/table/performance.dart';
-import 'package:wolog/database/table/mappable_entity.dart';
-import 'package:wolog/database/table/session.dart';
+import 'common.dart';
+import '../table/equipment.dart';
+import '../table/exercise_muscle_involvement.dart';
+import '../table/exercise.dart';
+import '../table/icon.dart';
+import '../table/body_positioning.dart';
+import '../table/muscle_part.dart';
+import '../table/muscle.dart';
+import '../table/performance.dart';
+import '../table/mappable_entity.dart';
+import '../table/session.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<int> _update(Database database, String tableName, MappableEntity mappableEntity) {
-  return database.update(
+Future<int> _update(final Database database, final String tableName, final MappableEntity mappableEntity) => 
+  database.update(
     tableName, 
     mappableEntity.toMap(), 
     where: getWhereClause(mappableEntity),
     whereArgs: getWhereArgs(mappableEntity)
   );
-}
 
-Future<int> updateEquipment(Database d, Equipment e) => _update(d, 'Equipment', e);
-Future<int> updateExerciseMuscleInvolvement(Database d, ExerciseMuscleInvolvement e) => _update(d, 'ExerciseMuscleInvolvement', e);
-Future<int> updateExercise(Database d, Exercise e) => _update(d, 'Exercise', e);
-Future<int> updateIcon(Database d, Icon e) => _update(d, 'Icon', e);
-Future<int> updateBodyPositioning(Database d, BodyPositioning e) => _update(d, 'BodyPositioning', e);
-Future<int> updateMusclePart(Database d, MusclePart e) => _update(d, 'MusclePart', e);
-Future<int> updateMuscle(Database d, Muscle e) => _update(d, 'Muscle', e);
-Future<int> updateSession(Database d, Session e) => _update(d, 'Session', e);
-Future<int> updatePerformance(Database d, Performance e) => _update(d, 'Performance', e);
+Future<int> updateEquipment(final Database d, final Equipment e) => _update(d, 'Equipment', e);
+Future<int> updateExerciseMuscleInvolvement(final Database d, final ExerciseMuscleInvolvement e) => _update(d, 'ExerciseMuscleInvolvement', e);
+Future<int> updateExercise(final Database d, final Exercise e) => _update(d, 'Exercise', e);
+Future<int> updateIcon(final Database d, final Icon e) => _update(d, 'Icon', e);
+Future<int> updateBodyPositioning(final Database d, final BodyPositioning e) => _update(d, 'BodyPositioning', e);
+Future<int> updateMusclePart(final Database d, final MusclePart e) => _update(d, 'MusclePart', e);
+Future<int> updateMuscle(final Database d, final Muscle e) => _update(d, 'Muscle', e);
+Future<int> updateSession(final Database d, final Session e) => _update(d, 'Session', e);
+Future<int> updatePerformance(final Database d, final Performance e) => _update(d, 'Performance', e);
