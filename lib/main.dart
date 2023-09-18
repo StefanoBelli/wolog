@@ -32,40 +32,28 @@ class InitialPage extends StatefulWidget {
 }
 
 class _InitialPageState extends State<StatefulWidget> {
-  bool _checkedDatabaseExistence = false;
-  bool _databaseExists = false;
-
   @override
   void initState() {
     super.initState();
     getDatabaseFilePath().then((final dbFilePath) {
       databaseExists(dbFilePath).then((final dbExists) {
-        setState(() {
-          _checkedDatabaseExistence = true;
-          _databaseExists = dbExists;
-        });
+        WidgetsBinding.instance.addPostFrameCallback(
+          dbExists ? 
+            (final _) =>
+              pushExercisePage(
+                context,
+                onErrorHook: () => showAppBlockingDialog(
+                  context,
+                  'Corrupted database',
+                  'Data is cleared, restart app to setup')) :
+            (final _) => 
+              Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (final context) => const NoDbFoundPage())));
       });
     });
   }
 
   @override
-  Widget build(final BuildContext context) {
-    if(_checkedDatabaseExistence) {
-      WidgetsBinding.instance.addPostFrameCallback((final _) {
-        if (_databaseExists) {
-          pushExercisePage(
-              context,
-              onErrorHook: () => showAppBlockingDialog(
-                context,
-                'Corrupted database',
-                'Data is cleared, restart app to setup'));
-        } else {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (final context) => const NoDbFoundPage()));
-        }
-      });
-    }
-
-    return const Scaffold();
-  }
+  Widget build(final BuildContext context) =>
+    const Scaffold();
 }
