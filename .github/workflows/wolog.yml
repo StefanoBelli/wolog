@@ -18,6 +18,7 @@ jobs:
     - run: flutter test --coverage
     - name: Coverage report
       uses: coverallsapp/github-action@v2
+      with:
         file: coverage/lcov.info
     - run: mv build/app/outputs/flutter-apk/app-release.apk wolog.apk
     - name: 'Upload built release APK'
