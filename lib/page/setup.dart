@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../database/database.dart';
 import 'exercise.dart';
@@ -154,18 +156,28 @@ class _ImportExistingDbState extends State<StatefulWidget> {
         _stopUiHttpDlStatusValueErrored(
           'Errored while downloading (maybe internet is gone?)');
       }, 
-      onDone: () {
-        _saveInTemporary(bodyBytes).then(
-          (final dbFile) {
-            _copyAsAppDb(dbFile).then((final _) {
-              pushExercisePage(
-                  context,
-                  onErrorHook: _stopUiHttpDlStatusValue);
-            });
-          },
-          onError: (final ae) {
-            _stopUiHttpDlStatusValueErrored((ae as ArgumentError).message);
-          });
+      onDone: () async {
+        File dbInTmp;
+
+        try {
+          dbInTmp = await _saveInTemporary(bodyBytes);
+        } on Object catch(e, st) {
+          if(mounted) {
+            showExceptionDialog(context, e, st);
+          }
+
+          _stopUiHttpDlStatusValueErrored('Could not save in temporary');
+          return;
+        }
+
+        await _copyAsAppDb(dbInTmp);
+        unawaited(dbInTmp.delete());
+
+        if(mounted) {
+          pushExercisePage(
+            context, 
+            onErrorHook: _stopUiHttpDlStatusValue);
+        }
       }, 
       cancelOnError: true
     );
@@ -182,6 +194,8 @@ class _ImportExistingDbState extends State<StatefulWidget> {
 
         if(pickedPath != null) {
           await _copyAsAppDb(File(pickedPath));
+          unawaited(FilePicker.platform.clearTemporaryFiles());
+
           if(mounted) {
             pushExercisePage(
               context,
