@@ -212,7 +212,6 @@ class _ImportExistingDbState extends State<StatefulWidget> {
   Radio<_ObtainDatabaseChoice> _getTileRadioLeader(
       final _ObtainDatabaseChoice choice) =>
     Radio<_ObtainDatabaseChoice>(
-      key: Key('radio-importdb-${choice.index}'),
       value: choice,
       groupValue: _loadResourceChoice,
       onChanged: (final v) => setState( () => _loadResourceChoice = v )
