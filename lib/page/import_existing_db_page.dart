@@ -10,44 +10,14 @@ import 'dart:io';
 
 import '../util.dart';
 
-class NoDbFoundPage extends StatelessWidget {
-  const NoDbFoundPage({super.key});
-
-  @override
-  Widget build(final BuildContext context) =>
-    Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child:
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center, 
-            children: [
-              const Text(
-                'No database found', 
-                style: TextStyle(fontSize: 30)
-              ),
-              TextButton(
-                onPressed: () => pushExercisePage(context),
-                child: const Text('Create new database')
-              ),
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(
-                            builder: (final _) => const _ImportExistingDbPage())),
-                child: const Text('Import existing database...')
-              )
-            ])));
-}
-
 enum _ObtainDatabaseChoice {
   defaultHttpUrl,
   customHttpUrl,
   deviceStorage
 }
 
-class _ImportExistingDbPage extends StatefulWidget {
-  const _ImportExistingDbPage();
+class ImportExistingDbPage extends StatefulWidget {
+  const ImportExistingDbPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _ImportExistingDbState();
@@ -242,6 +212,7 @@ class _ImportExistingDbState extends State<StatefulWidget> {
   Radio<_ObtainDatabaseChoice> _getTileRadioLeader(
       final _ObtainDatabaseChoice choice) =>
     Radio<_ObtainDatabaseChoice>(
+      key: Key('radio-importdb-${choice.index}'),
       value: choice,
       groupValue: _loadResourceChoice,
       onChanged: (final v) => setState( () => _loadResourceChoice = v )
@@ -261,21 +232,21 @@ class _ImportExistingDbState extends State<StatefulWidget> {
                 style: TextStyle(fontSize: 30)
               ),
               ListTile(
-                title: const Text('Download using HTTP default URL'),
+                title: const Text('Get wolog reccomended database'),
                 leading: _getTileRadioLeader(_ObtainDatabaseChoice.defaultHttpUrl), 
               ),
               ListTile(
-                title: const Text('Download using HTTP custom URL'),
+                title: const Text('Get user-customized database (using HTTPS)'),
                 leading: _getTileRadioLeader(_ObtainDatabaseChoice.customHttpUrl),
               ),
               TextField(
                 enabled: _loadResourceChoice == _ObtainDatabaseChoice.customHttpUrl,
                 keyboardType: TextInputType.url,
                 controller: _customUrlFieldController,
-                decoration: const InputDecoration(hintText: 'Type in custom URL')
+                decoration: const InputDecoration(hintText: 'Type custom URL')
               ),
               ListTile(
-                title: const Text('Copy from my own device storage'),
+                title: const Text('Copy user-customized database from internal storage'),
                 leading: _getTileRadioLeader(_ObtainDatabaseChoice.deviceStorage),
               ),
               const Text(

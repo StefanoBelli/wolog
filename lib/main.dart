@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'database/database.dart';
 import 'page/exercise.dart';
-import 'page/setup.dart';
+import 'page/no_db_found_page.dart';
 import 'util.dart';
 
 void main() {
