@@ -18,11 +18,76 @@ import 'package:wolog/database/table/exercise_muscle_involvement.dart';
 import 'package:wolog/database/table/performance.dart';
 
 void main() {
-  setUp(() async {
+  setUpAll(() async {
     databaseFactory = databaseFactoryFfi;
+    if(File(await getDatabaseFilePath()).existsSync()) {
+      File(await getDatabaseFilePath()).deleteSync();
+    }
+  });
+
+  tearDownAll(() async {
+    if(File(await getDatabaseFilePath()).existsSync()) {
+      File(await getDatabaseFilePath()).deleteSync();
+    }
+  });
+
+  test('Check database creation when it does not exist on filesystem', () async {
     final db = await getDatabase();
-    await File(db.path).delete();
+    expect(await db.getVersion(), 1);
     await db.close();
+  });
+
+  test('Check database creation when it already exists (valid) on filesystem', () async {
+    final db = await getDatabase();
+    await db.close();
+    final db1 = await getDatabase();
+    expect(await db1.getVersion(), 1);
+    await db1.close();
+  });
+
+  test('Check database creation when a non valid file exists (<16B size) on filesystem', () async {
+    final dbPath = await getDatabaseFilePath();
+    File(dbPath).writeAsBytesSync(<int>[0x90, 0x90, 0x90]);
+    
+    try {
+      await getDatabase();
+      fail('');
+    // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      expect(e,isInstanceOf<Exception>());
+    }
+
+    await File(dbPath).delete();
+  });
+  
+  test('Check database creation when a non valid file exists (=16B size) on filesystem', () async {
+    final dbPath = await getDatabaseFilePath();
+    File(dbPath).writeAsBytesSync(List.generate(16, (final _) => 0x90));
+    
+    try {
+      await getDatabase();
+      fail('');
+    // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      expect(e,isInstanceOf<Exception>());
+    }
+
+    await File(dbPath).delete();
+  });
+
+  test('Check database creation when a non valid file exists (>16B size) on filesystem', () async {
+    final dbPath = await getDatabaseFilePath();
+    File(dbPath).writeAsBytesSync(List.generate(17, (final _) => 0x90));
+    
+    try {
+      await getDatabase();
+      fail('');
+    // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      expect(e,isInstanceOf<Exception>());
+    }
+
+    await File(dbPath).delete();
   });
 
   test('Check database version 1 tables', () async {
