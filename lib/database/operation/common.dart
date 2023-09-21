@@ -3,9 +3,10 @@ import '../table/mappable_entity.dart';
 String getWhereClause(final MappableEntity mappableEntity) {
   final whereClauseBuffer = StringBuffer();
   final primaryKey = mappableEntity.getPrimaryKeyInMap();
+  final m = mappableEntity.toMap();
 
   for(final key in primaryKey) {
-    whereClauseBuffer.write('$key = ? AND ');
+    whereClauseBuffer.write(m[key] != null ? '$key = ? AND ' : '$key IS NULL AND ');
   }
 
   return whereClauseBuffer.toString()
@@ -19,7 +20,9 @@ List<Object?> getWhereArgs(final MappableEntity mappableEntity) {
   final whereArgs = <Object?>[];
 
   for(final key in primaryKey) {
-    whereArgs.add(m[key]);
+    if(m[key] != null) {
+      whereArgs.add(m[key]);
+    }
   }
 
   return whereArgs;
