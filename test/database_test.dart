@@ -25,7 +25,7 @@ void main() {
     }
   });
 
-  tearDownAll(() async {
+  tearDown(() async {
     if(File(await getDatabaseFilePath()).existsSync()) {
       File(await getDatabaseFilePath()).deleteSync();
     }
@@ -56,8 +56,6 @@ void main() {
     } catch (e) {
       expect(e,isInstanceOf<Exception>());
     }
-
-    await File(dbPath).delete();
   });
   
   test('Check database creation when a non valid file exists (=16B size) on filesystem', () async {
@@ -71,8 +69,6 @@ void main() {
     } catch (e) {
       expect(e,isInstanceOf<Exception>());
     }
-
-    await File(dbPath).delete();
   });
 
   test('Check database creation when a non valid file exists (>16B size) on filesystem', () async {
@@ -86,8 +82,6 @@ void main() {
     } catch (e) {
       expect(e,isInstanceOf<Exception>());
     }
-
-    await File(dbPath).delete();
   });
 
   test('Check database version 1 tables', () async {
