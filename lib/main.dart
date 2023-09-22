@@ -35,6 +35,7 @@ class _InitialPageState extends State<StatefulWidget> {
   @override
   void initState() {
     super.initState();
+    setDatabaseFactory();
     getDatabaseFilePath().then((final dbFilePath) {
       databaseExists(dbFilePath).then((final dbExists) {
         WidgetsBinding.instance.addPostFrameCallback(
