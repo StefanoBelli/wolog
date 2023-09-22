@@ -121,10 +121,14 @@ const String ddlStmts =
   ''
   ;
 
-void setDatabaseFactory() {
+DatabaseFactory _getDatabaseFactory() {
   if(Platform.isLinux || Platform.isWindows) {
-    databaseFactory = databaseFactoryFfi;
+    return databaseFactoryFfi;
+  } else if(Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
+    return databaseFactory;
   }
+
+  throw Error();
 }
 
 Future<Database> getDatabase() async {
@@ -145,10 +149,11 @@ Future<Database> getDatabase() async {
     throw Exception('this is not a SQLite database file');
   }
 
-  return openDatabase(
+  return _getDatabaseFactory().openDatabase(
     dbPath,
-    version: 1,
-    onCreate: onCreateFn
+    options: OpenDatabaseOptions(
+      version: 1, 
+      onCreate: onCreateFn),
   );
 }
 

@@ -19,10 +19,6 @@ import 'package:wolog/database/table/performance.dart';
 
 void main() {
   setUpAll(() async {
-    if(Platform.isLinux || Platform.isWindows) {
-      databaseFactory = databaseFactoryFfi;
-    }
-
     if(File(await getDatabaseFilePath()).existsSync()) {
       File(await getDatabaseFilePath()).deleteSync();
     }
