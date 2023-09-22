@@ -1,10 +1,9 @@
 // ignore_for_file: missing_whitespace_between_adjacent_strings, noop_primitive_operations
 
+import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:collection/collection.dart';
 import 'dart:io';
-
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 const String ddlStmts =
   ''
@@ -121,11 +120,6 @@ const String ddlStmts =
   ''
   ;
 
-void initSqfliteFfi() {
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
-}
-
 Future<Database> getDatabase() async {
   final dbPath = await getDatabaseFilePath();
   final dbOnFs = _getDbOnFsInfo(dbPath);
@@ -146,7 +140,7 @@ Future<Database> getDatabase() async {
 
   return openDatabase(
     dbPath,
-    version: 1, 
+    version: 1,
     onCreate: onCreateFn
   );
 }

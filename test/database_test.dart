@@ -19,7 +19,7 @@ import 'package:wolog/database/table/performance.dart';
 
 void main() {
   setUpAll(() async {
-    initSqfliteFfi();
+    databaseFactory = databaseFactoryFfi;
     if(File(await getDatabaseFilePath()).existsSync()) {
       File(await getDatabaseFilePath()).deleteSync();
     }
@@ -87,11 +87,9 @@ void main() {
   test('Check database version 1 tables', () async {
     final db = await getDatabase();
 
-    final sep = Platform.isWindows ? r'\' : '/';
-
     expect(db.isOpen, true);
     expect(await db.getVersion(), 1);
-    expect(db.path.split(sep).last, 'wolog.db');
+    expect(db.path.split('/').last, 'wolog.db');
 
     final magicRs = await db.rawQuery('SELECT magic FROM WologMagic;');
     expect(magicRs.length, 1);
