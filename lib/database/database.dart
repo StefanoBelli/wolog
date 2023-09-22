@@ -192,4 +192,4 @@ Future<void> closeDatabase(final Database database) =>
   database.close();
 
 Future<String> getDatabaseFilePath() async => 
-  join(await getDatabasesPath(), 'wolog.db');
+  join(await _getDatabaseFactory().getDatabasesPath(), 'wolog.db');
