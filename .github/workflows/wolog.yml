@@ -76,6 +76,9 @@ jobs:
       with:
         channel: 'stable'
         architecture: x64
+    - uses: crazy-max/ghaction-chocolatey@v3
+      with:
+        args: install sqlite
     - run: flutter pub get
     - run: flutter config --enable-windows-desktop
     - run: flutter build windows --release
