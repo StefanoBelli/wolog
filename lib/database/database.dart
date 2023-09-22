@@ -121,14 +121,9 @@ const String ddlStmts =
   ''
   ;
 
-DatabaseFactory _getDatabaseFactory() {
-  if(Platform.isLinux || Platform.isWindows) {
-    return databaseFactoryFfi;
-  } else if(Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
-    return databaseFactory;
-  }
-
-  throw Error();
+void initSqfliteFfi() {
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
 }
 
 Future<Database> getDatabase() async {
@@ -149,11 +144,10 @@ Future<Database> getDatabase() async {
     throw Exception('this is not a SQLite database file');
   }
 
-  return _getDatabaseFactory().openDatabase(
+  return openDatabase(
     dbPath,
-    options: OpenDatabaseOptions(
-      version: 1, 
-      onCreate: onCreateFn),
+    version: 1, 
+    onCreate: onCreateFn
   );
 }
 
@@ -192,4 +186,4 @@ Future<void> closeDatabase(final Database database) =>
   database.close();
 
 Future<String> getDatabaseFilePath() async => 
-  join(await _getDatabaseFactory().getDatabasesPath(), 'wolog.db');
+  join(await getDatabasesPath(), 'wolog.db');

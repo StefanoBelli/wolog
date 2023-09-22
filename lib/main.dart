@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database/database.dart';
 import 'page/exercise.dart';
 import 'page/no_db_found_page.dart';
@@ -35,6 +35,7 @@ class _InitialPageState extends State<StatefulWidget> {
   @override
   void initState() {
     super.initState();
+    initSqfliteFfi();
     getDatabaseFilePath().then((final dbFilePath) {
       databaseExists(dbFilePath).then((final dbExists) {
         WidgetsBinding.instance.addPostFrameCallback(

@@ -1,4 +1,4 @@
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 Future<List<Map<String, Object?>>> _queryAllObject(final Database database, final String tableName) => 
   database.query(tableName);

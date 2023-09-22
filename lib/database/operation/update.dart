@@ -1,3 +1,5 @@
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
 import 'common.dart';
 import '../table/equipment.dart';
 import '../table/exercise_muscle_involvement.dart';
@@ -9,7 +11,6 @@ import '../table/muscle.dart';
 import '../table/performance.dart';
 import '../table/mappable_entity.dart';
 import '../table/session.dart';
-import 'package:sqflite/sqflite.dart';
 
 Future<int> _update(final Database database, final String tableName, final MappableEntity mappableEntity) => 
   database.update(

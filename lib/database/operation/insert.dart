@@ -1,3 +1,5 @@
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
 import '../table/equipment.dart';
 import '../table/exercise_muscle_involvement.dart';
 import '../table/exercise.dart';
@@ -8,7 +10,6 @@ import '../table/muscle_part.dart';
 import '../table/muscle.dart';
 import '../table/performance.dart';
 import '../table/session.dart';
-import 'package:sqflite/sqflite.dart';
 
 Future<int> _insert(final Database database, final String tableName, final MappableEntity mappableEntity) => 
   database.insert(tableName, mappableEntity.toMap());
