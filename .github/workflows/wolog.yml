@@ -24,7 +24,7 @@ jobs:
     - name: 'Upload built release APK'
       uses: actions/upload-artifact@v3
       with:
-        name: Android APK
+        name: Wolog APK
         path: wolog.apk
   ios_job:
     name: "iOS"
