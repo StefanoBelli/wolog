@@ -19,6 +19,7 @@ import 'package:wolog/database/table/performance.dart';
 
 void main() {
   setUpAll(() async {
+    sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
     if(File(await getDatabaseFilePath()).existsSync()) {
       File(await getDatabaseFilePath()).deleteSync();
