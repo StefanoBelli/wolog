@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../dbholder.dart';
-import '../database/database.dart';
+import '../../dbholder.dart';
+import '../../database/database.dart';
 import 'dart:io';
+import '../exercise_page.dart';
 
-import '../util.dart';
+import '../../util.dart';
 
 Future<void> _corruptedDatabaseHandler(
   final void Function()? postHook, final BuildContext c, final Object e, final StackTrace s) async {
@@ -46,12 +47,4 @@ void pushExercisePage(final BuildContext context, {final void Function()? onErro
       _corruptedDatabaseHandler(onErrorHook, context, de, st);
     }
   );
-}
-
-class ExercisePage extends StatelessWidget {
-  const ExercisePage({super.key});
-
-  @override
-  Widget build(final BuildContext context) => 
-    const Scaffold(body: Center(child: Text('EXERCISE')),);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'database/database.dart';
-import 'page/exercise.dart';
+import 'page/util/push_exercise.dart';
 import 'page/no_db_found_page.dart';
 import 'util.dart';
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'exercise.dart';
+import '../util.dart';
+import 'util/push_exercise.dart';
 import 'import_existing_db_page.dart';
 
 class NoDbFoundPage extends StatelessWidget {
@@ -20,7 +21,13 @@ class NoDbFoundPage extends StatelessWidget {
                 style: TextStyle(fontSize: 30)
               ),
               TextButton(
-                onPressed: () => pushExercisePage(context),
+                onPressed: () => pushExercisePage(
+                  context,
+                  onErrorHook: () => showAppBlockingDialog(
+                    context, 
+                    'App is blocked, restart.', 
+                    'SQL DDL is wrong somewhere, '
+                    'please report this bug. Data is cleared.')),
                 child: const Text('Create new database')
               ),
               TextButton(

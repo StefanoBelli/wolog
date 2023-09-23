@@ -67,3 +67,11 @@ void showAppBlockingDialog(final BuildContext c, final String title, final Strin
     content: Text(description)
   ));
 }
+
+Icon buildIconFromName(final String? iconName) {
+  if(iconName == null) {
+    return const Icon(Icons.question_mark);
+  }
+
+  throw UnimplementedError();
+}
