@@ -1,6 +1,6 @@
-import 'mappable_entity.dart';
+import 'mappable_table.dart';
 
-class Muscle implements MappableEntity {
+class Muscle implements MappableTable {
   static const String nameKey = 'Name';
   static const String frontalKey = 'Frontal';
   static const String upperBodyKey = 'UpperBody';

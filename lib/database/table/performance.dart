@@ -1,6 +1,6 @@
-import 'mappable_entity.dart';
+import 'mappable_table.dart';
 
-class Performance implements MappableEntity {
+class Performance implements MappableTable {
   static const String sessionDateTimestampKey = 'SessionDateTimestamp';
   static const String sessionExerciseNameKey = 'SessionExerciseName';
   static const String sessionExerciseEquipmentNameKey = 'SessionExerciseEquipmentName';

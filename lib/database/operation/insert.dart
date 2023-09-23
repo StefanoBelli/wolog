@@ -3,14 +3,14 @@ import '../table/exercise_muscle_involvement.dart';
 import '../table/exercise.dart';
 import '../table/icon.dart';
 import '../table/body_positioning.dart';
-import '../table/mappable_entity.dart';
+import '../table/mappable_table.dart';
 import '../table/muscle_part.dart';
 import '../table/muscle.dart';
 import '../table/performance.dart';
 import '../table/session.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<int> _insert(final Database database, final String tableName, final MappableEntity mappableEntity) => 
+Future<int> _insert(final Database database, final String tableName, final MappableTable mappableEntity) => 
   database.insert(tableName, mappableEntity.toMap());
 
 Future<int> insertEquipment(final Database d, final Equipment e) => _insert(d, 'Equipment', e);

@@ -1,6 +1,6 @@
-import 'mappable_entity.dart';
+import 'mappable_table.dart';
 
-class Icon implements MappableEntity {
+class Icon implements MappableTable {
   static const String nameKey = 'Name';
   static const String filenameKey = 'Filename';
   static const String descriptionKey = 'Description';

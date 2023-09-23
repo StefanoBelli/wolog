@@ -7,11 +7,11 @@ import '../table/body_positioning.dart';
 import '../table/muscle_part.dart';
 import '../table/muscle.dart';
 import '../table/performance.dart';
-import '../table/mappable_entity.dart';
+import '../table/mappable_table.dart';
 import '../table/session.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<int> _delete(final Database database, final String tableName, final MappableEntity mappableEntity) => 
+Future<int> _delete(final Database database, final String tableName, final MappableTable mappableEntity) => 
   database.delete(
     tableName, 
     where: getWhereClause(mappableEntity),

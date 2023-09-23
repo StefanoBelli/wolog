@@ -1,6 +1,6 @@
-import 'mappable_entity.dart';
+import 'mappable_table.dart';
 
-class BodyPositioning implements MappableEntity {
+class BodyPositioning implements MappableTable {
   static const String nameKey = 'Name';
   static const String iconNameKey = 'IconName';
   static const String descriptionKey = 'Description';

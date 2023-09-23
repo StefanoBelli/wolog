@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../database/table/exercise.dart';
-import '../repository/exercise.dart';
+import '../model/exercise.dart';
+import '../repository.dart';
 
 class ExercisePage extends StatefulWidget {
   const ExercisePage({super.key});
@@ -11,7 +11,7 @@ class ExercisePage extends StatefulWidget {
 }
 
 class _ExercisePageState extends State<StatefulWidget> {
-  var _exs = <Exercise>[];
+  var _exs = <ExerciseModel>[];
 
   @override
   void initState() {
@@ -20,7 +20,7 @@ class _ExercisePageState extends State<StatefulWidget> {
   }
 
   void _refreshExs() {
-    ExerciseRepository().fetchAll().then((final l) {
+    Repository().fetchAllExercises().then((final l) {
       setState(() {
         _exs = l;
       });
