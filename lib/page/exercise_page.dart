@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/exercise.dart';
 import '../repository.dart';
+import 'util/icon.dart';
 
 class ExercisePage extends StatefulWidget {
   const ExercisePage({super.key});
@@ -35,7 +36,32 @@ class _ExercisePageState extends State<StatefulWidget> {
     } else {
       return ListView.builder(
         itemCount: _exs.length,
-        itemBuilder: (final _, final index) => null);
+        itemBuilder: (final _, final index) {
+          var eqDesc = _exs[index].bodyPositioningName;
+          if(_exs[index].equipmentName != null) {
+            eqDesc += ', ${_exs[index].bodyPositioningName}';
+          }
+
+          return Card(
+            child: SizedBox(
+              width: 300,
+              height: 100,
+              child: Row(
+                children: [
+                  buildIconFromName(_exs[index].iconName),
+                  Column(
+                    children: [
+                      Text(_exs[index].name),
+                      Text(eqDesc),
+                      Text(_exs[index].description ?? 'No description provided')
+                    ],),
+                  IconButton(
+                    onPressed: () {},  
+                    icon: const Icon(Icons.arrow_forward),)
+                ],
+              )));
+        }
+      );
     }
   }
 

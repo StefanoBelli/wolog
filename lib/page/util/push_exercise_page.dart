@@ -5,6 +5,7 @@ import 'dart:io';
 import '../exercise_page.dart';
 
 import '../../util.dart';
+import 'icon.dart';
 
 Future<void> _corruptedDatabaseHandler(
   final void Function()? postHook, final BuildContext c, final Object e, final StackTrace s) async {
@@ -25,11 +26,13 @@ void pushExercisePage(final BuildContext context, {final void Function()? onErro
       dbInst.rawQuery('SELECT magic FROM WologMagic WHERE magic = 789456123;').then((final m) {
         if(m.length == 1) {
           DbHolder.getInstance()?.database = dbInst;
-          Navigator.of(context).popUntil((final route) => route.isFirst);
 
-          Navigator.pushReplacement(context,
-            MaterialPageRoute(
-                builder: (final ctx) => const ExercisePage()));
+          preloadIconPaths().then((final _) {
+            Navigator.of(context).popUntil((final route) => route.isFirst);
+
+            Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (final ctx) => const ExercisePage()));
+          });
         } else {
           try {
             throw Exception('database does not contain a valid wolog magic number');

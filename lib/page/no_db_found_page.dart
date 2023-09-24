@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../util.dart';
-import 'util/push_exercise.dart';
+import 'util/push_exercise_page.dart';
 import 'import_existing_db_page.dart';
 
 class NoDbFoundPage extends StatelessWidget {
