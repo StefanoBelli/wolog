@@ -66,9 +66,15 @@ class _ExercisePageState extends State<StatefulWidget> {
                       Text(eqDesc),
                       Text(_exs[index].description ?? 'No description provided')
                     ],),
-                  IconButton(
-                    onPressed: () => _pushPageMaybeRefresh(ExerciseDetailsPage(_exs[index])),  
-                    icon: const Icon(Icons.arrow_forward),)
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => _pushPageMaybeRefresh(ExerciseDetailsPage(_exs[index])),  
+                        icon: const Icon(Icons.arrow_forward),),
+                      IconButton(
+                        onPressed: () => _pushPageMaybeRefresh(EditExercisePage(_exs[index])),
+                        icon: const Icon(Icons.edit))
+                    ])
                 ],
               )));
         }
@@ -82,7 +88,7 @@ class _ExercisePageState extends State<StatefulWidget> {
       appBar: AppBar(
         title: const Text('Exercises')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _pushPageMaybeRefresh(const EditExercisePage()),
+        onPressed: () => _pushPageMaybeRefresh(const EditExercisePage(null)),
         child: const Icon(Icons.add),
       ),
       body: _getBody() 

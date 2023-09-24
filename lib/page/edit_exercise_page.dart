@@ -4,7 +4,7 @@ import '../model/exercise.dart';
 
 class EditExercisePage extends StatefulWidget {
   final ExerciseModel? _exerciseModel;
-  const EditExercisePage({final ExerciseModel? exerciseModel, super.key}) : 
+  const EditExercisePage(final ExerciseModel? exerciseModel, {super.key}) : 
     _exerciseModel = exerciseModel;
 
   @override
