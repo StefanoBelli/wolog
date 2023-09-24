@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/exercise.dart';
 import '../repository.dart';
-import 'add_new_exercise_page.dart';
+import 'edit_exercise_page.dart';
 import 'exercise_details_page.dart';
 import 'util/icon.dart';
 
@@ -82,7 +82,7 @@ class _ExercisePageState extends State<StatefulWidget> {
       appBar: AppBar(
         title: const Text('Exercises')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _pushPageMaybeRefresh(const AddNewExercisePage()),
+        onPressed: () => _pushPageMaybeRefresh(const EditExercisePage()),
         child: const Icon(Icons.add),
       ),
       body: _getBody() 
