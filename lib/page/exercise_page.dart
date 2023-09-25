@@ -5,6 +5,7 @@ import '../repository.dart';
 import 'edit_exercise_page.dart';
 import 'exercise_details_page.dart';
 import 'util/icon.dart';
+import 'edit_exercise_strategy.dart';
 
 class ExercisePage extends StatefulWidget {
   const ExercisePage({super.key});
@@ -72,7 +73,8 @@ class _ExercisePageState extends State<StatefulWidget> {
                         onPressed: () => _pushPageMaybeRefresh(ExerciseDetailsPage(_exs[index])),  
                         icon: const Icon(Icons.arrow_forward),),
                       IconButton(
-                        onPressed: () => _pushPageMaybeRefresh(EditExercisePage(_exs[index])),
+                        onPressed: () => _pushPageMaybeRefresh(
+                          EditExercisePage(ChangeExerciseStrategy(_exs[index]))),
                         icon: const Icon(Icons.edit))
                     ])
                 ],
@@ -88,7 +90,7 @@ class _ExercisePageState extends State<StatefulWidget> {
       appBar: AppBar(
         title: const Text('Exercises')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _pushPageMaybeRefresh(const EditExercisePage(null)),
+        onPressed: () => _pushPageMaybeRefresh(EditExercisePage(AddExerciseStrategy())),
         child: const Icon(Icons.add),
       ),
       body: _getBody() 

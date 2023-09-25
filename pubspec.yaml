@@ -46,6 +46,7 @@ dependencies:
   http: ^1.1.0
   collection: ^1.17.2
   rich_clipboard: ^1.0.1
+  tuple: ^2.0.2
 
 dev_dependencies:
   flutter_test:
