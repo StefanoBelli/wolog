@@ -1,9 +1,11 @@
 import 'package:tuple/tuple.dart';
+import 'package:flutter/material.dart';
 
 import '../model/exercise.dart';
 
 abstract class EditExerciseStrategy {
   String getEditLabel();
+  Icon getApplyActionIcon();
   String? getIconName();
   String? getName();
   String? getBodyPositioningName();
@@ -110,6 +112,12 @@ class AddExerciseStrategy implements EditExerciseStrategy {
     // TODO: implement setName
   }
 
+  @override
+  Icon getApplyActionIcon() {
+    // TODO: implement getApplyActionIcon
+    throw UnimplementedError();
+  }
+
 }
 
 class ChangeExerciseStrategy implements EditExerciseStrategy {
@@ -200,6 +208,12 @@ class ChangeExerciseStrategy implements EditExerciseStrategy {
   @override
   void setName(final String name) {
     // TODO: implement setName
+  }
+
+  @override
+  Icon getApplyActionIcon() {
+    // TODO: implement getApplyActionIcon
+    throw UnimplementedError();
   }
 
 }
