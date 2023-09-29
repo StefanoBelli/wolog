@@ -5,13 +5,21 @@ import '../../repository.dart';
 
 final _iconPath = {};
 
-dynamic buildIconFromName(final String? iconName) {
+Container buildIconFromName(final String? iconName, {final double sqSize = 100}) {
+  dynamic icon;
+
   if(iconName == null) {
-    return const Icon(Icons.question_mark);
+    icon = Icon(Icons.question_mark, size: sqSize);
+  } else {
+    icon = ImageIcon(
+        Image.asset('asset/${_iconPath[iconName]}').image, size: sqSize,);
   }
 
-  return ImageIcon(
-    Image.asset('asset/${_iconPath[iconName]}').image);
+  return Container(
+      width: sqSize,
+      height: sqSize,
+      alignment: Alignment.center,
+      child: icon);
 }
 
 Future<void> preloadIconPaths() async {

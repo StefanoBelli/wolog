@@ -88,15 +88,12 @@ class _EditExercisePageState extends State<EditExercisePage> {
                     IconButton(
                       onPressed: () {}, //TODO
                       icon: buildIconFromName(widget._strategy.getIconName()),),
-                    Column(
-                      children: [
-                        const Text('Name'),
-                        TextField(
-                          controller: _nameEditingController,
-                          decoration: const InputDecoration(
-                            labelText: 'Enter exercise name...'))
-                      ],
-                    )
+                    Flexible(
+                        fit: FlexFit.tight,
+                        child: TextField(
+                            controller: _nameEditingController,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter exercise name...')))
                   ],
                 ),
                 const Text('Body positioning'),
@@ -135,6 +132,15 @@ class _EditExercisePageState extends State<EditExercisePage> {
                       icon: const Icon(Icons.add))
                   ],
                 ),
+                const Text('Description'),
+                TextField(
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter description here...',
+                  ),
+                  keyboardType: TextInputType.text,
+                  controller: _descriptionEditingController
+                ),
                 Row(
                   children: [
                     const Text('Involved muscles'),
@@ -144,49 +150,42 @@ class _EditExercisePageState extends State<EditExercisePage> {
                     )
                   ],
                 ),
-                ListView.builder(
-                  itemCount: _allMuscles.length,
-                  itemBuilder: (final _, final index) {
-                    final muscleParts = _allMuscles[index].muscleParts;
-                    ListView? lvChildren;
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _allMuscles.length,
+                    itemBuilder: (final _, final index) {
+                      final muscleParts = _allMuscles[index].muscleParts;
+                      ListView? lvChildren;
 
-                    if(muscleParts != null) {
-                      lvChildren = ListView(
-                        children: <Widget>[
-                          for(var i = 0; i < muscleParts.length; ++i)
-                            ListTile(
-                                leading: Checkbox(
-                                  value: false, //TODO
-                                  onChanged: (final c) {}, //TODO
-                                ),
-                                title: Text(muscleParts[i].name))
+                      if(muscleParts != null) {
+                        lvChildren = ListView(
+                          children: <Widget>[
+                            for(var i = 0; i < muscleParts.length; ++i)
+                              ListTile(
+                                  leading: Checkbox(
+                                    value: false, //TODO
+                                    onChanged: (final c) {}, //TODO
+                                  ),
+                                  title: Text(muscleParts[i].name))
+                          ]
+                        );
+                      }
+
+                      return Row(
+                        children: [
+                          ListTile(
+                              leading: Checkbox(
+                                value: false, //TODO
+                                onChanged: (final c) {}, //TODO
+                              ),
+                              title: Text(_allMuscles[index].name)
+                          ),
+                          if(lvChildren != null) lvChildren
                         ]
                       );
                     }
-
-                    return Row(
-                      children: [
-                        ListTile(
-                            leading: Checkbox(
-                              value: false, //TODO
-                              onChanged: (final c) {}, //TODO
-                            ),
-                            title: Text(_allMuscles[index].name)
-                        ),
-                        if(lvChildren != null) lvChildren
-                      ]
-                    );
-                  }
+                  )
                 ),
-                const Text('Description'),
-                TextField(
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter description here...',
-                  ),
-                  keyboardType: TextInputType.text,
-                  controller: _descriptionEditingController
-                )
               ]
             )
           ),
