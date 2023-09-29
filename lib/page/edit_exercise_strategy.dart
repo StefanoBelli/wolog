@@ -11,29 +11,23 @@ abstract class EditExerciseStrategy {
   String? getBodyPositioningName();
   String? getDescription();
   String? getEquipmentName();
-  List<Tuple2<String?, String>> getExerciseMuscleInvolvement();
   void setIconName(final String? name);
   void setName(final String name);
   void setBodyPositioningName(final String name);
   void setDescription(final String? description);
   void setEquipmentName(final String? name);
-  void addMuscleInvolvement(final Tuple2<String?, String> pair);
-  void delMuscleInvolvement(final Tuple2<String?, String> pair);
+  void addMuscleInvolvement(final Tuple2<String, String?> pair);
+  void delMuscleInvolvement(final Tuple2<String, String?> pair);
   void apply();
 }
 
 class AddExerciseStrategy implements EditExerciseStrategy {
-  String? name;
-  String? bodyPositioningName;
-  String? equipmentName;
-  String? iconName;
-  String? description;
-  List<Tuple2<String?, String>>? pair;
-
-  @override
-  void addMuscleInvolvement(final Tuple2<String?, String> pair) {
-    // TODO: implement addMuscleInvolvement
-  }
+  String? _name;
+  String? _bodyPositioningName;
+  String? _equipmentName;
+  String? _iconName;
+  String? _description;
+  List<Tuple2<String, String?>>? _pairs;
 
   @override
   void apply() {
@@ -41,97 +35,84 @@ class AddExerciseStrategy implements EditExerciseStrategy {
   }
 
   @override
-  void delMuscleInvolvement(final Tuple2<String?, String> pair) {
-    // TODO: implement delMuscleInvolvement
+  void addMuscleInvolvement(final Tuple2<String, String?> pair) {
+    if(_pairs == null) {
+      _pairs = [ pair ];
+      return;
+    }
+
+    _pairs!.add(pair);
   }
 
   @override
-  String? getBodyPositioningName() {
-    // TODO: implement getBodyPositioningName
-    throw UnimplementedError();
+  void delMuscleInvolvement(final Tuple2<String, String?> pair) {
+    for(var i = 0; i < _pairs!.length; ++i) {
+      if(pair == _pairs![i]) {
+        _pairs!.removeAt(i);
+        return;
+      }
+    }
   }
 
   @override
-  String? getDescription() {
-    // TODO: implement getDescription
-    throw UnimplementedError();
-  }
+  String? getBodyPositioningName() =>
+      null;
 
   @override
-  String getEditLabel() {
-    // TODO: implement getEditLabel
-    throw UnimplementedError();
-  }
+  String? getDescription() =>
+      null;
 
   @override
-  String? getEquipmentName() {
-    // TODO: implement getEquipmentName
-    throw UnimplementedError();
-  }
+  String getEditLabel() =>
+      'Add new';
 
   @override
-  List<Tuple2<String?, String>> getExerciseMuscleInvolvement() {
-    // TODO: implement getExerciseMuscleInvolvement
-    throw UnimplementedError();
-  }
+  String? getEquipmentName() =>
+      null;
 
   @override
-  String? getIconName() {
-    // TODO: implement getIconName
-    throw UnimplementedError();
-  }
+  String? getIconName() =>
+      null;
 
   @override
-  String? getName() {
-    // TODO: implement getName
-    throw UnimplementedError();
-  }
+  String? getName() =>
+      null;
 
   @override
-  void setBodyPositioningName(final String name) {
-    // TODO: implement setBodyPositioningName
-  }
+  void setBodyPositioningName(final String name) =>
+      _bodyPositioningName = name;
 
   @override
-  void setDescription(final String? description) {
-    // TODO: implement setDescription
-  }
+  void setDescription(final String? description) =>
+      _description = description;
 
   @override
-  void setEquipmentName(final String? name) {
-    // TODO: implement setEquipmentName
-  }
+  void setEquipmentName(final String? name) =>
+      _equipmentName = name;
 
   @override
-  void setIconName(final String? name) {
-    // TODO: implement setIconName
-  }
+  void setIconName(final String? name) =>
+      _iconName = name;
 
   @override
-  void setName(final String name) {
-    // TODO: implement setName
-  }
+  void setName(final String name) =>
+      _name = name;
 
   @override
-  Icon getApplyActionIcon() {
-    // TODO: implement getApplyActionIcon
-    throw UnimplementedError();
-  }
+  Icon getApplyActionIcon() =>
+      const Icon(Icons.add);
 
 }
 
 class ChangeExerciseStrategy implements EditExerciseStrategy {
   final ExerciseModel _existingExerciseModel;
   final ExerciseModel _changedExerciseModel;
+  final _miToAdd = <Tuple2<String, String?>>[];
+  final _miToDel = <Tuple2<String, String?>>[];
 
   ChangeExerciseStrategy(final ExerciseModel exerciseModel) :
     _existingExerciseModel = exerciseModel,
     _changedExerciseModel = exerciseModel;
-
-  @override
-  void addMuscleInvolvement(final Tuple2<String?, String> pair) {
-    // TODO: implement addMuscleInvolvement
-  }
 
   @override
   void apply() {
@@ -139,81 +120,75 @@ class ChangeExerciseStrategy implements EditExerciseStrategy {
   }
 
   @override
-  void delMuscleInvolvement(final Tuple2<String?, String> pair) {
-    // TODO: implement delMuscleInvolvement
+  void addMuscleInvolvement(final Tuple2<String, String?> pair) {
+    for(var i = 0; i < _miToDel.length; ++i) {
+      if(_miToDel[i] == pair) {
+        _miToDel.removeAt(i);
+        return;
+      }
+    }
+
+    _miToAdd.add(pair);
   }
 
   @override
-  String? getBodyPositioningName() {
-    // TODO: implement getBodyPositioningName
-    throw UnimplementedError();
+  void delMuscleInvolvement(final Tuple2<String, String?> pair) {
+    for(var i = 0; i < _miToAdd.length; ++i) {
+      if(_miToAdd[i] == pair) {
+        _miToAdd.removeAt(i);
+        return;
+      }
+    }
+
+    _miToDel.add(pair);
   }
 
   @override
-  String? getDescription() {
-    // TODO: implement getDescription
-    throw UnimplementedError();
-  }
+  String? getBodyPositioningName() =>
+      _existingExerciseModel.bodyPositioningName;
 
   @override
-  String getEditLabel() {
-    // TODO: implement getEditLabel
-    throw UnimplementedError();
-  }
+  String? getDescription() =>
+      _existingExerciseModel.description;
 
   @override
-  String? getEquipmentName() {
-    // TODO: implement getEquipmentName
-    throw UnimplementedError();
-  }
+  String getEditLabel() =>
+      'Edit';
 
   @override
-  List<Tuple2<String?, String>> getExerciseMuscleInvolvement() {
-    // TODO: implement getExerciseMuscleInvolvement
-    throw UnimplementedError();
-  }
+  String? getEquipmentName() =>
+      _existingExerciseModel.equipmentName;
 
   @override
-  String? getIconName() {
-    // TODO: implement getIconName
-    throw UnimplementedError();
-  }
+  String? getIconName() =>
+      _existingExerciseModel.iconName;
 
   @override
-  String? getName() {
-    // TODO: implement getName
-    throw UnimplementedError();
-  }
+  String? getName() =>
+      _existingExerciseModel.name;
 
   @override
-  void setBodyPositioningName(final String name) {
-    // TODO: implement setBodyPositioningName
-  }
+  void setBodyPositioningName(final String name) =>
+      _changedExerciseModel.bodyPositioningName = name;
 
   @override
-  void setDescription(final String? description) {
-    // TODO: implement setDescription
-  }
+  void setDescription(final String? description) =>
+      _changedExerciseModel.description = description;
 
   @override
-  void setEquipmentName(final String? name) {
-    // TODO: implement setEquipmentName
-  }
+  void setEquipmentName(final String? name) =>
+      _changedExerciseModel.equipmentName = name;
 
   @override
-  void setIconName(final String? name) {
-    // TODO: implement setIconName
-  }
+  void setIconName(final String? name) =>
+      _changedExerciseModel.iconName = name;
 
   @override
-  void setName(final String name) {
-    // TODO: implement setName
-  }
+  void setName(final String name) =>
+      _changedExerciseModel.name = name;
 
   @override
-  Icon getApplyActionIcon() {
-    // TODO: implement getApplyActionIcon
-    throw UnimplementedError();
-  }
+  Icon getApplyActionIcon() =>
+      const Icon(Icons.edit);
 
 }

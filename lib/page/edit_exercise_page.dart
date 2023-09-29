@@ -19,6 +19,8 @@ class EditExercisePage extends StatefulWidget {
 class _EditExercisePageState extends State<EditExercisePage> {
   final _nameEditingController = TextEditingController();
   final _descriptionEditingController = TextEditingController();
+  final _equipmentDropdownController = TextEditingController();
+  final _bodyPositioningDropdownController = TextEditingController();
 
   var _equipments = <EquipmentModel>[];
   var _allMuscles = <MuscleModel>[];
@@ -28,8 +30,11 @@ class _EditExercisePageState extends State<EditExercisePage> {
   @override
   void initState() {
     super.initState();
+
     final exerciseName = widget._strategy.getName();
     final description = widget._strategy.getDescription();
+    final equipmentName = widget._strategy.getEquipmentName();
+    final bodyPositioningName = widget._strategy.getBodyPositioningName();
 
     if(exerciseName != null) {
       Repository().fetchMusclesInvolvedInExerciseByName(
@@ -44,6 +49,14 @@ class _EditExercisePageState extends State<EditExercisePage> {
       _descriptionEditingController.text = description;
     }
 
+    if(equipmentName != null) {
+      _equipmentDropdownController.text = equipmentName;
+    }
+
+    if(bodyPositioningName != null) {
+      _bodyPositioningDropdownController.text = bodyPositioningName;
+    }
+
     Repository().fetchAllEquipments()
         .then((final l) => setState(() => _equipments = l));
 
@@ -56,121 +69,127 @@ class _EditExercisePageState extends State<EditExercisePage> {
       
   @override
   Widget build(final BuildContext context) =>
-    Scaffold(
-      appBar: AppBar(
-        title: Text('${widget._strategy.getEditLabel()} exercise'),
-        actions: [
-          IconButton(
-            onPressed: () {}, //TODO
-            icon: widget._strategy.getApplyActionIcon(),
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-            Row(
-              children: [
+    WillPopScope(
+        child:
+          Scaffold(
+            appBar: AppBar(
+              title: Text('${widget._strategy.getEditLabel()} exercise'),
+              actions: [
                 IconButton(
                   onPressed: () {}, //TODO
-                  icon: buildIconFromName(widget._strategy.getIconName()),),
-                Column(
+                  icon: widget._strategy.getApplyActionIcon(),
+                )
+              ],
+            ),
+            body: Column(
+              children: [
+                Row(
                   children: [
-                    const Text('Name'),
-                    TextField(
-                      controller: _nameEditingController,
-                      decoration: const InputDecoration(
-                        labelText: 'Enter exercise name...'))
+                    IconButton(
+                      onPressed: () {}, //TODO
+                      icon: buildIconFromName(widget._strategy.getIconName()),),
+                    Column(
+                      children: [
+                        const Text('Name'),
+                        TextField(
+                          controller: _nameEditingController,
+                          decoration: const InputDecoration(
+                            labelText: 'Enter exercise name...'))
+                      ],
+                    )
                   ],
-                )
-              ],
-            ),
-            const Text('Body positioning'),
-            Row(
-              children: [
-                DropdownMenu(
-                  onSelected: (final e) {}, //TODO
-                  dropdownMenuEntries: [
-                    for(var i = 0; i < _bodyPositionings.length; ++i)
-                      DropdownMenuEntry(
-                          value: i,
-                          label: _bodyPositionings[i].name)
-                  ]
                 ),
-                IconButton(
-                  onPressed: (){}, //TODO
-                  icon: const Icon(Icons.add))
-              ],
-            ),
-            const Text('Equipment'),
-            Row(
-              children: [
-                DropdownMenu(
-                  onSelected: (final e) {}, //TODO
-                  dropdownMenuEntries: [
-                    for(var i = 0; i < _equipments.length; ++i)
-                      DropdownMenuEntry(
-                          value: i,
-                          label: _equipments[i].name)
-                  ]
-                ),
-                IconButton(
-                  onPressed: () {}, //TODO
-                  icon: const Icon(Icons.add))
-              ],
-            ),
-            Row(
-              children: [
-                const Text('Involved muscles'),
-                IconButton(
-                  icon: const Icon(Icons.add), 
-                  onPressed: () {}, //TODO
-                )
-              ],
-            ),
-            ListView.builder(
-              itemCount: _allMuscles.length,
-              itemBuilder: (final _, final index) {
-                final muscleParts = _allMuscles[index].muscleParts;
-                ListView? lvChildren;
-
-                if(muscleParts != null) {
-                  lvChildren = ListView(
-                      children: <Widget>[
-                        for(var i = 0; i < muscleParts.length; ++i)
-                          ListTile(
-                              leading: Checkbox(
-                                value: false, //TODO
-                                onChanged: (final c) {}, //TODO
-                              ),
-                              title: Text(muscleParts[i].name))
+                const Text('Body positioning'),
+                Row(
+                  children: [
+                    DropdownMenu(
+                      enableSearch: false,
+                      onSelected: (final e) {}, //TODO
+                      dropdownMenuEntries: [
+                        for(var i = 0; i < _bodyPositionings.length; ++i)
+                          DropdownMenuEntry(
+                            value: i,
+                            label: _bodyPositionings[i].name)
                       ]
-                  );
-                }
+                    ),
+                    IconButton(
+                      onPressed: (){}, //TODO
+                      icon: const Icon(Icons.add))
+                  ],
+                ),
+                const Text('Equipment'),
+                Row(
+                  children: [
+                    DropdownMenu(
+                      enableSearch: false,
+                      onSelected: (final e) {}, //TODO
+                      dropdownMenuEntries: [
+                        for(var i = 0; i < _equipments.length; ++i)
+                          DropdownMenuEntry(
+                            value: i,
+                            label: _equipments[i].name)
+                      ]
+                    ),
+                    IconButton(
+                      onPressed: () {}, //TODO
+                      icon: const Icon(Icons.add))
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text('Involved muscles'),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {}, //TODO
+                    )
+                  ],
+                ),
+                ListView.builder(
+                  itemCount: _allMuscles.length,
+                  itemBuilder: (final _, final index) {
+                    final muscleParts = _allMuscles[index].muscleParts;
+                    ListView? lvChildren;
 
-                return Row(
-                    children: [
-                      ListTile(
-                          leading: Checkbox(
-                            value: false, //TODO
-                            onChanged: (final c) {}, //TODO
-                          ),
-                          title: Text(_allMuscles[index].name)
-                      ),
-                      if(lvChildren != null) lvChildren
-                    ]
-                );
-              }
-            ),
-            const Text('Description'),
-            TextField(
-              maxLines: 3,
-              decoration: const InputDecoration(
-                hintText: 'Enter description here...',
-              ),
-              keyboardType: TextInputType.text,
-              controller: _descriptionEditingController
+                    if(muscleParts != null) {
+                      lvChildren = ListView(
+                        children: <Widget>[
+                          for(var i = 0; i < muscleParts.length; ++i)
+                            ListTile(
+                                leading: Checkbox(
+                                  value: false, //TODO
+                                  onChanged: (final c) {}, //TODO
+                                ),
+                                title: Text(muscleParts[i].name))
+                        ]
+                      );
+                    }
+
+                    return Row(
+                      children: [
+                        ListTile(
+                            leading: Checkbox(
+                              value: false, //TODO
+                              onChanged: (final c) {}, //TODO
+                            ),
+                            title: Text(_allMuscles[index].name)
+                        ),
+                        if(lvChildren != null) lvChildren
+                      ]
+                    );
+                  }
+                ),
+                const Text('Description'),
+                TextField(
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter description here...',
+                  ),
+                  keyboardType: TextInputType.text,
+                  controller: _descriptionEditingController
+                )
+              ]
             )
-        ]
-      )
+          ),
+        onWillPop: () async => true
     );
 }
