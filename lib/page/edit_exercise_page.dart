@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tuple/tuple.dart';
 
 import '../model/body_positioning.dart';
 import '../model/equipment.dart';
@@ -18,13 +17,13 @@ class EditExercisePage extends StatefulWidget {
 }
 
 class _EditExercisePageState extends State<EditExercisePage> {
-  final nameEditingController = TextEditingController();
-  final descriptionEditingController = TextEditingController();
+  final _nameEditingController = TextEditingController();
+  final _descriptionEditingController = TextEditingController();
 
-  var equipments = <EquipmentModel>[];
-  var allMuscles = <MuscleModel>[];
-  var bodyPositionings = <BodyPositioningModel>[];
-  var musclesInvolved = null;
+  var _equipments = <EquipmentModel>[];
+  var _allMuscles = <MuscleModel>[];
+  var _bodyPositionings = <BodyPositioningModel>[];
+  var _musclesInvolved;
 
   @override
   void initState() {
@@ -37,22 +36,22 @@ class _EditExercisePageState extends State<EditExercisePage> {
           exerciseName,
           widget._strategy.getEquipmentName(),
           widget._strategy.getBodyPositioningName()!)
-            .then((final l) => setState(() => musclesInvolved = l));
-      nameEditingController.text = exerciseName;
+            .then((final l) => setState(() => _musclesInvolved = l));
+      _nameEditingController.text = exerciseName;
     }
 
     if(description != null) {
-      descriptionEditingController.text = description;
+      _descriptionEditingController.text = description;
     }
 
     Repository().fetchAllEquipments()
-        .then((final l) => setState(() => equipments = l));
+        .then((final l) => setState(() => _equipments = l));
 
     Repository().fetchAllMuscles()
-        .then((final l) => setState(() => allMuscles = l));
+        .then((final l) => setState(() => _allMuscles = l));
 
     Repository().fetchAllBodyPositionings()
-        .then((final l) => setState(() => bodyPositionings = l));
+        .then((final l) => setState(() => _bodyPositionings = l));
   }
       
   @override
@@ -60,56 +59,107 @@ class _EditExercisePageState extends State<EditExercisePage> {
     Scaffold(
       appBar: AppBar(
         title: Text('${widget._strategy.getEditLabel()} exercise'),
-        actions: [ IconButton(
-          onPressed: () {},
-          icon: widget._strategy.getApplyActionIcon(),)],
+        actions: [
+          IconButton(
+            onPressed: () {}, //TODO
+            icon: widget._strategy.getApplyActionIcon(),
+          )
+        ],
       ),
       body: Column(
         children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: buildIconFromName(widget._strategy.getIconName()),),
-              Column(
-                children: [
-                  const Text('Name'),
-                  TextField(
-                    controller: nameEditingController,
-                    decoration: const InputDecoration(
-                      labelText: 'Enter exercise name...'
-                    )
-                  )
-                ],)
-            ],),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {}, //TODO
+                  icon: buildIconFromName(widget._strategy.getIconName()),),
+                Column(
+                  children: [
+                    const Text('Name'),
+                    TextField(
+                      controller: _nameEditingController,
+                      decoration: const InputDecoration(
+                        labelText: 'Enter exercise name...'))
+                  ],
+                )
+              ],
+            ),
             const Text('Body positioning'),
             Row(
               children: [
-                const DropdownMenu(
-                  dropdownMenuEntries: []),
+                DropdownMenu(
+                  onSelected: (final e) {}, //TODO
+                  dropdownMenuEntries: [
+                    for(var i = 0; i < _bodyPositionings.length; ++i)
+                      DropdownMenuEntry(
+                          value: i,
+                          label: _bodyPositionings[i].name)
+                  ]
+                ),
                 IconButton(
-                  onPressed: (){}, 
+                  onPressed: (){}, //TODO
                   icon: const Icon(Icons.add))
-              ],),
+              ],
+            ),
             const Text('Equipment'),
             Row(
               children: [
-                const DropdownMenu(
-                  dropdownMenuEntries: []),
+                DropdownMenu(
+                  onSelected: (final e) {}, //TODO
+                  dropdownMenuEntries: [
+                    for(var i = 0; i < _equipments.length; ++i)
+                      DropdownMenuEntry(
+                          value: i,
+                          label: _equipments[i].name)
+                  ]
+                ),
                 IconButton(
-                  onPressed: (){}, 
+                  onPressed: () {}, //TODO
                   icon: const Icon(Icons.add))
-              ],),
+              ],
+            ),
             Row(
               children: [
                 const Text('Involved muscles'),
                 IconButton(
                   icon: const Icon(Icons.add), 
-                  onPressed: () {},)
-              ],),
+                  onPressed: () {}, //TODO
+                )
+              ],
+            ),
             ListView.builder(
-              itemCount: 0,
-              itemBuilder: (final _, final index) => null
+              itemCount: _allMuscles.length,
+              itemBuilder: (final _, final index) {
+                final muscleParts = _allMuscles[index].muscleParts;
+                ListView? lvChildren;
+
+                if(muscleParts != null) {
+                  lvChildren = ListView(
+                      children: <Widget>[
+                        for(var i = 0; i < muscleParts.length; ++i)
+                          ListTile(
+                              leading: Checkbox(
+                                value: false, //TODO
+                                onChanged: (final c) {}, //TODO
+                              ),
+                              title: Text(muscleParts[i].name))
+                      ]
+                  );
+                }
+
+                return Row(
+                    children: [
+                      ListTile(
+                          leading: Checkbox(
+                            value: false, //TODO
+                            onChanged: (final c) {}, //TODO
+                          ),
+                          title: Text(_allMuscles[index].name)
+                      ),
+                      if(lvChildren != null) lvChildren
+                    ]
+                );
+              }
             ),
             const Text('Description'),
             TextField(
@@ -118,8 +168,9 @@ class _EditExercisePageState extends State<EditExercisePage> {
                 hintText: 'Enter description here...',
               ),
               keyboardType: TextInputType.text,
-              controller: descriptionEditingController
+              controller: _descriptionEditingController
             )
-        ],)
+        ]
+      )
     );
 }
