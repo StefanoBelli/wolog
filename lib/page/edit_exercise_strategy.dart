@@ -5,7 +5,6 @@ import '../model/exercise.dart';
 
 abstract class EditExerciseStrategy {
   String getEditLabel();
-  Icon getApplyActionIcon();
   String? getIconName();
   String? getName();
   String? getBodyPositioningName();
@@ -97,11 +96,6 @@ class AddExerciseStrategy implements EditExerciseStrategy {
   @override
   void setName(final String name) =>
       _name = name;
-
-  @override
-  Icon getApplyActionIcon() =>
-      const Icon(Icons.add);
-
 }
 
 class ChangeExerciseStrategy implements EditExerciseStrategy {
@@ -186,9 +180,4 @@ class ChangeExerciseStrategy implements EditExerciseStrategy {
   @override
   void setName(final String name) =>
       _changedExerciseModel.name = name;
-
-  @override
-  Icon getApplyActionIcon() =>
-      const Icon(Icons.edit);
-
 }

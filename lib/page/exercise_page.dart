@@ -35,8 +35,10 @@ class _ExercisePageState extends State<StatefulWidget> {
     final needsRefresh = await Navigator.of(context).push(
       MaterialPageRoute(builder: (final _) => pageToPush));
           
-    if(needsRefresh) {
-      _refreshExs();
+    if(needsRefresh != null) {
+      if(needsRefresh) {
+        _refreshExs();
+      }
     }
   }
 
