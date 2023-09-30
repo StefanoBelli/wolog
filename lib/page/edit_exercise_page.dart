@@ -229,6 +229,7 @@ class _TwoStepSelectorState extends State<_TwoStepSelector> {
                     t.item2 == widget._allMuscles[_muscleIndex].muscleParts![index].name
             ) {
               hasChecked = true;
+              break;
             }
           }
 
